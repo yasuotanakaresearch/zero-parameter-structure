@@ -102,11 +102,11 @@ python -m code.paper1_cosmology
 
 ---
 
-### Paper 2 — Electroweak (in preparation)
+### Paper 2 — Electroweak
 
 Structural Origin of Electromagnetic Coupling and Mass Hierarchy
 
-- https://doi.org/10.5281/zenodo.19426367
+- https://doi.org/10.5281/zenodo.19429328
 
 Corresponding code:
 ```
@@ -115,12 +115,16 @@ python -m code.paper2_electroweak
 
 ---
 
-### Paper 3 — Gravity (restricted / under validation)
+### Paper 3 — Gravity
 
 Structural Origin of Gravity
 
-This sector is currently under validation.
-Code and full implementation are not yet publicly released.
+- https://doi.org/10.5281/zenodo.19427362
+
+Corresponding code:
+```
+python -m code.paper3_gravity
+```
 
 ---
 
