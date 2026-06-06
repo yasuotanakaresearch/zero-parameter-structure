@@ -26,7 +26,7 @@ class StructuralConstants:
         This constant represents the reconstruction ratio of the full structure
         from the observable sector, and sets the scale for structural transmission.
 
-    Z:
+    S:
         Internal/external conversion factor.
         This constant bridges internal binding structure and externally observed structure,
         and appears when translating between structural propagation and light-observed quantities.
@@ -34,12 +34,12 @@ class StructuralConstants:
     In this interpretation:
     - light propagation corresponds to the externally observed transmission
     - structural propagation corresponds to the underlying update/transfer structure
-    - Z mediates the conversion between internal binding and external observation
+    - S mediates the conversion between internal binding and external observation
     """
 
     # Structural propagation ratio
     R: Fraction = Fraction(24 + 2, 12)
 
     # Internal/external conversion factor
-    Z: Fraction = Fraction(24 + 7, 24)
+    S: Fraction = Fraction(24 + 7, 24)
 

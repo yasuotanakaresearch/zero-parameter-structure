@@ -26,7 +26,7 @@ class DensityResult:
     The four components are expressed in exact rational form so that
     the closure structure and inter-component relations can be inspected
     without numerical rounding:
-        ΩΛ  : dark-energy fraction
+        ΩΛ : dark-energy fraction
         Ωm  : total matter fraction
         Ωdm : dark-matter fraction
         Ωb  : baryon fraction
@@ -46,9 +46,9 @@ def compute_density_parameters(R: Fraction) -> DensityResult:
 
     which yields the structural relations
         ΩΛ = 3R^2    / (3R^2 + 3R)
-        Ωm = 3R       / (3R^2 + 3R)
+        Ωm  = 3R      / (3R^2 + 3R)
         Ωdm = (3R - 1)/ (3R^2 + 3R)
-        Ωb = 1        / (3R^2 + 3R)
+        Ωb  = 1       / (3R^2 + 3R)
 
     so that the exact ratio
         ΩΛ : Ωm : Ωb = 3R^2 : 3R : 1
