@@ -15,6 +15,7 @@ For full theory-vs-observation comparisons, run the paper scripts:
     python -m code.paper2_electron
     python -m code.paper3_gravity
     python -m code.paper4_quark_mass
+    python -m code.paper5_neutrino
 """
 
 from fractions import Fraction
@@ -49,7 +50,7 @@ psi_e0 = Fraction((R * S**2) * (6 * 24**2) - 7**2, 2)
 delta_e = Fraction(1, 2) + Fraction(1, 5**2)
 psi_e = psi_e0 - delta_e
 
-alpha_inv = 4 * math.pi * float(3 * R**2 / S) * (1 + float(1 / psi_e))
+alpha_inv = 4 * math.pi * (3 * R**2 / S) * (1 + 1 / psi_e)
 alpha = alpha_inv**-1
 
 psi_me_star = 24 * (Fraction(3, 2) * (R * S) * (6 * 24) - 1)
@@ -57,11 +58,7 @@ psi_me = 12 * psi_me_star + Fraction(psi_e0, 3)
 
 # Electron rest energy in MeV.
 # The expression is kept close to the structural form used in the paper code.
-me_c2 = float(
-    Fraction(C, 10**3) ** 2
-    / (psi_me * (1 + psi_me_star**-2))
-    * 10**-6
-)
+me_c2 = Fraction(C, 10**3) ** 2 / (psi_me * (1 + psi_me_star**-2)) * 10**-6
 
 
 # =========================================================
@@ -69,7 +66,7 @@ me_c2 = float(
 # =========================================================
 
 psi_g = (12 * (3 * R**2) * (4 * R) + 2 * R) / 4
-sqrt_G = (alpha * float(S)) / (math.pi * float(psi_g))
+sqrt_G = (alpha * S) / (math.pi * psi_g)
 G = sqrt_G**2
 
 
@@ -77,28 +74,49 @@ G = sqrt_G**2
 # Quark masses
 # =========================================================
 
-psi_d = Fraction(2, 1)
+psi_d = 2
 psi_u = 2 * R
 
 K = {
-    "u": 1 / psi_u,
-    "d": 1 / psi_d,
-    "c": 1 + 1 / psi_d,
-    "s": 1 - 1 / (2 * psi_d),
-    "t": 2 + 1 / psi_u,
-    "b": 2 + 1 / psi_d,
+    "u": (    1 / psi_u),
+    "d": (    1 / psi_d),
+    "c": (1 + 1 / psi_d),
+    "s": (1 - 1 / (2 * psi_d)),
+    "t": (2 + 1 / psi_u),
+    "b": (2 + 1 / psi_d),
 }
 
-M0 = float((3 * R**2) * S) * me_c2
-A_u = (8 * math.pi * float(R**2)) / float(S)
-A_d = (8 * float(R)) / float(S)
+M0  = (3 * R**2) * S * me_c2
+A_u = (8 * math.pi * R**2) / S
+A_d = (8 * R) / S
 
-m_u = float(K["u"]) * M0
-m_d = float(K["d"]) * M0
-m_c = float(K["c"]) * M0 * A_u
-m_s = float(K["s"]) * M0 * A_d
-m_t = float(K["t"]) * M0 * A_u**2
-m_b = float(K["b"]) * M0 * A_d**2
+m_u = K["u"] * M0
+m_d = K["d"] * M0
+m_c = K["c"] * M0 * A_u
+m_s = K["s"] * M0 * A_d
+m_t = K["t"] * M0 * A_u**2
+m_b = K["b"] * M0 * A_d**2
+
+# =========================================================
+# Neutrino masses
+# =========================================================
+
+m1_over_me = 12 * S * alpha**4
+m2_over_me = m1_over_me * (1 + 1 / (3 * R**2))
+m3_over_me = m1_over_me * (2 + 1 / R)
+
+# Convert electron rest energy from MeV to eV.
+me_c2_ev = me_c2 * 10**6
+
+m_nu1 = m1_over_me * me_c2_ev
+m_nu2 = m2_over_me * me_c2_ev
+m_nu3 = m3_over_me * me_c2_ev
+
+dm21 = m_nu2**2 - m_nu1**2
+dm31 = m_nu3**2 - m_nu1**2
+dm32 = m_nu3**2 - m_nu2**2
+
+sum_mnu = m_nu1 + m_nu2 + m_nu3
 
 
 # =========================================================
@@ -144,7 +162,7 @@ def main() -> None:
     print(f"Psi_d        = {psi_d} = {float(psi_d):.12f}")
     print(f"M0           = {M0:.12f} MeV")
     print(f"A_u          = {A_u:.12f}")
-    print(f"A_d          = {A_d:.12f}")
+    print(f"A_d          = {float(A_d):.12f}")
     print()
     print(f"m_u          = {m_u:.12f} MeV")
     print(f"m_d          = {m_d:.12f} MeV")
@@ -152,6 +170,22 @@ def main() -> None:
     print(f"m_s          = {m_s:.12f} MeV")
     print(f"m_t          = {m_t / 1000:.12f} GeV")
     print(f"m_b          = {m_b / 1000:.12f} GeV")
+    print()
+
+    print("Neutrino masses")
+    print("----------------")
+    print(f"m1 / me      = {m1_over_me:.12e}")
+    print(f"m2 / me      = {m2_over_me:.12e}")
+    print(f"m3 / me      = {m3_over_me:.12e}")
+    print()
+    print(f"m1 c^2       = {m_nu1:.12f} eV")
+    print(f"m2 c^2       = {m_nu2:.12f} eV")
+    print(f"m3 c^2       = {m_nu3:.12f} eV")
+    print(f"Sum mnu      = {sum_mnu:.12f} eV")
+    print()
+    print(f"Delta m21^2  = {dm21:.12e} eV^2")
+    print(f"Delta m31^2  = {dm31:.12e} eV^2")
+    print(f"Delta m32^2  = {dm32:.12e} eV^2")
     print()
 
     print("Note")

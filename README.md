@@ -242,6 +242,22 @@ Detailed numerical outputs are reproduced by running the corresponding paper scr
 | t | 173.012622 GeV | 172.560000 GeV | +1.460070 |
 | b | 4.184843 GeV | 4.183000 GeV | +0.263329 |
 
+### Neutrino Masses
+
+| Quantity | Theory | Observation | σ |
+|---|---:|---:|---:|
+| Δm²21 [eV²] | 7.418258e-5 | 7.500000e-5 | -0.430222 |
+| Δm²32 [eV²] | 2.477963e-3 | 2.451000e-3 | +1.037042 |
+
+### Absolute Mass Predictions
+
+| Quantity | Prediction |
+|---|---:|
+| mν₁ [eV] | 0.022460 |
+| mν₂ [eV] | 0.024055 |
+| mν₃ [eV] | 0.055287 |
+| Σmν [eV] | 0.101802 |
+
 Full results can be reproduced with:
 
 ```bash
@@ -249,6 +265,7 @@ python -m code.paper1_cosmology
 python -m code.paper2_electron
 python -m code.paper3_gravity
 python -m code.paper4_quark_mass
+python -m code.paper5_neutrino
 ```
 
 ---
@@ -300,7 +317,7 @@ A dependency-free end-to-end example that computes cosmological density relation
 
 **Structural Origin of Cosmological Density Ratios**
 
-- https://doi.org/10.5281/zenodo.19351666
+- https://doi.org/10.5281/zenodo.19028107
 
 Corresponding code:
 
@@ -314,7 +331,7 @@ python -m code.paper1_cosmology
 
 **Structural Origin of Electromagnetic Coupling and Mass Hierarchy**
 
-- https://doi.org/10.5281/zenodo.20569089
+- https://doi.org/10.5281/zenodo.19426366
 
 Corresponding code:
 
@@ -328,7 +345,7 @@ python -m code.paper2_electron
 
 **Structural Origin of Gravity**
 
-- https://doi.org/10.5281/zenodo.20032091
+- https://doi.org/10.5281/zenodo.19427361
 
 Corresponding code:
 
@@ -340,9 +357,9 @@ python -m code.paper3_gravity
 
 ### Paper 4 — Quark Masses
 
-**Structural Origin of Quark Masses**
+**Structural Origin of Quark Mass Hierarchy**
 
-- https://doi.org/10.5281/zenodo.20569712
+- https://doi.org/10.5281/zenodo.20569711
 
 Corresponding code:
 
@@ -354,9 +371,13 @@ python -m code.paper4_quark_mass
 
 ### Paper 5 — Neutrino
 
-**Structural Origin of Neutrino Masses**
+**Structural Origin of Neutrino Mass Relations**
 
-- T.B.D.
+- https://doi.org/10.5281/zenodo.20627554
+
+```bash
+python -m code.paper5_neutrino
+```
 
 ---
 
