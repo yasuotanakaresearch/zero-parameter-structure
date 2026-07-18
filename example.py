@@ -26,19 +26,23 @@ import math
 # Fixed structural constants
 # =========================================================
 
-C = 299_792_458  # exact speed of light in m/s
+c = 299792458  # exact speed of light in m/s
 
-R = Fraction(13, 6)
-S = Fraction(31, 24)
+P_MIN = 1 + 1
+P_MAX = 3 + 4
+P_MID = P_MAX - P_MIN
+
+R = (Fraction(1) + Fraction(P_MIN, 24)) * 2
+S =  Fraction(1) + Fraction(P_MAX, 24)
 
 
 # =========================================================
 # Cosmology
 # =========================================================
 
-Omega_b = 1 / (3 * R**2 + 3 * R)
-Omega_m = 3 * R * Omega_b
-Omega_L = 3 * R**2 * Omega_b
+Omega_b  = 1 / (3 * R**2 + 3 * R)
+Omega_m  = 3 * R    * Omega_b
+Omega_L  = 3 * R**2 * Omega_b
 Omega_dm = Omega_m - Omega_b
 
 
@@ -46,19 +50,43 @@ Omega_dm = Omega_m - Omega_b
 # Electron sector
 # =========================================================
 
-psi_e0 = Fraction((R * S**2) * (6 * 24**2) - 7**2, 2)
-delta_e = Fraction(1, 2) + Fraction(1, 5**2)
-psi_e = psi_e0 - delta_e
+core_13 = R * 6
+core_31 = S * 24
 
-alpha_inv = 4 * math.pi * (3 * R**2 / S) * (1 + 1 / psi_e)
+# Structural backbone values Psi_0.
+psi_e0   = Fraction(3, 2) * (core_13    * core_31**2 - P_MAX**2) / 3
+psi_p0   = Fraction(3, 2) * (core_13**2 * core_31    + P_MAX**2) / 12
+psi_n0   = Fraction(3, 2) * (core_13    * core_31    + P_MIN**2) * 12
+psi_mu0  = Fraction(psi_p0, P_MIN**2)
+psi_tau0 = psi_p0
+
+# Residual structural fluctuations delta_psi.
+delta_e   = Fraction(1, 2) + Fraction(1, P_MID**2)
+delta_p   = Fraction(6**2) * Fraction(1, psi_e0 + 24 - Fraction(1, 2))
+delta_n   = Fraction(2, 3) * Fraction(12*P_MAX - 1, 12*P_MAX + 3)
+delta_mu  = Fraction(1, 2) - Fraction(1, P_MAX**2) + Fraction(1, (psi_mu0 * P_MAX**2))
+delta_tau = Fraction(1, 1)
+
+psi_e     = psi_e0   - delta_e
+psi_p     = psi_p0   + delta_p
+psi_n     = psi_n0   - delta_n
+psi_mu    = psi_mu0  - delta_mu
+psi_tau   = psi_tau0 + delta_tau
+
+alpha_inv =         4*math.pi * (3*R**2 / S) * (1 + 1/psi_e)
+mmu_me    = (3/2) * 4*math.pi * (3*R**2 / S) * (1 + 1/psi_mu)
+tau_mu    = (3/4)             * (8*R    * S) * (1 + 1/psi_tau)
+mp_me     =         alpha_inv * (8*R    / S) * (1 - 1/psi_p)
+mn_me     =         alpha_inv * (8*R    / S) * (1 - 1/psi_n)
+tau_me    = tau_mu * mmu_me
+
 alpha = alpha_inv**-1
-
-psi_me_star = 24 * (Fraction(3, 2) * (R * S) * (6 * 24) - 1)
-psi_me = 12 * psi_me_star + Fraction(psi_e0, 3)
 
 # Electron rest energy in MeV.
 # The expression is kept close to the structural form used in the paper code.
-me_c2 = Fraction(C, 10**3) ** 2 / (psi_me * (1 + psi_me_star**-2)) * 10**-6
+psi_me_star = 24 * (Fraction(3, 2) * (R * S) * (6 * 24) - 1)
+psi_me      = 12 * psi_me_star + Fraction(psi_e0, 3)
+me_c2       = Fraction(c, 10**3) ** 2 / (psi_me * (1 + psi_me_star**-2)) * 10**-6
 
 
 # =========================================================
@@ -74,21 +102,18 @@ G = sqrt_G**2
 # Quark masses
 # =========================================================
 
-psi_d = 2
-psi_u = 2 * R
-
 K = {
-    "u": (    1 / psi_u),
-    "d": (    1 / psi_d),
-    "c": (1 + 1 / psi_d),
-    "s": (1 - 1 / (2 * psi_d)),
-    "t": (2 + 1 / psi_u),
-    "b": (2 + 1 / psi_d),
+    "u": (    1 / (2 * R)),
+    "d": (    1 /  2),
+    "c": (1 + 1 /  2),
+    "s": (1 - 1 /  4),
+    "t": (2 + 1 / (2 * R)),
+    "b": (2 + 1 /  2),
 }
 
 M0  = (3 * R**2) * S * me_c2
-A_u = (8 * math.pi * R**2) / S
 A_d = (8 * R) / S
+A_u = math.pi * R * A_d
 
 m_u = K["u"] * M0
 m_d = K["d"] * M0
@@ -140,13 +165,21 @@ def main() -> None:
 
     print("Electron sector")
     print("---------------")
-    print(f"Psi_e0       = {psi_e0}")
     print(f"Psi_e        = {float(psi_e):.12f}")
+    print(f"Psi_p        = {float(psi_p):.12f}")
+    print(f"Psi_n        = {float(psi_n):.12f}")
+    print(f"Psi_mu       = {float(psi_mu):.12f}")
+    print(f"Psi_tau      = {float(psi_tau):.12f}")
     print(f"alpha^-1     = {alpha_inv:.12f}")
     print(f"alpha        = {alpha:.12e}")
+    print(f"mp/me        = {mp_me:.12f}")
+    print(f"mn/me        = {mn_me:.12f}")
+    print(f"mmu/me       = {mmu_me:.12f}")
+    print(f"tau/mmu      = {tau_mu:.12f}")
+    print(f"tau/me       = {tau_me:.12f}")
     print(f"Psi_me*      = {psi_me_star}")
     print(f"Psi_me       = {psi_me}")
-    print(f"m_e c^2      = {me_c2:.12f} MeV")
+    print(f"m_e c^2      = {me_c2:.15f} MeV")
     print()
 
     print("Gravity")
@@ -158,8 +191,6 @@ def main() -> None:
 
     print("Quark masses")
     print("------------")
-    print(f"Psi_u        = {psi_u} = {float(psi_u):.12f}")
-    print(f"Psi_d        = {psi_d} = {float(psi_d):.12f}")
     print(f"M0           = {M0:.12f} MeV")
     print(f"A_u          = {A_u:.12f}")
     print(f"A_d          = {float(A_d):.12f}")

@@ -11,14 +11,12 @@ No free parameters. No tuning. Only structure.
 from dataclasses import dataclass
 from fractions import Fraction
 from decimal import Decimal, getcontext
-from typing import Optional
-
-from core.structural_constants import StructuralConstants
+from core.structural_constants import StructuralConstants, P_MIN, P_MAX, P_MID
 
 getcontext().prec = 56
 
 PI = Decimal("3.14159265358979323846264338327950288419716939937510")
-c  = Fraction(299792458, 1)
+c = 299_792_458  # exact speed of light in m/s
 
 
 # =========================================================
@@ -45,158 +43,67 @@ class PsiValues:
     delta_mu: Fraction
     delta_tau: Fraction
 
-@dataclass(frozen=True)
-class PsiRow:
-    coefficient: Fraction
-    core: Fraction
-    correction: Fraction
-    normalization: Fraction
-
-    def value(self) -> Fraction:
-        """
-        Structural backbone value:
-
-            Ψ0 = coefficient * (core + correction) * normalization
-
-        δψ is applied separately in compute_psi_values().
-        """
-        return self.coefficient * (self.core + self.correction) * self.normalization
-
 
 def compute_psi_values(constants: StructuralConstants) -> PsiValues:
     """
-    Construct the structural Psi values for each particle sector.
+    Construct the fixed structural Psi values for each particle sector.
 
-    Layer structure
-    ---------------
-    Ψ0   : structural backbone
-    δψ  : residual structural fluctuation
-    Ψeff : effective value used in observable relations
+    The backbone values follow the common integer-core representation
+    used in the paper.  With
 
-        Ψeff = Ψ0 + δψ
+        6R = 13,  24S = 31,
+        P_min = 2,  P_mid = 5,  P_max = 7,
+        Psi_s = 72,
 
-    Design rule
-    -----------
-    Ψ0 and δψ are separated explicitly.
-    δψ is a fixed sector-dependent structural fluctuation,
-    not an adjustable parameter.
+    the backbones are
+
+        Psi_e0   = (3/2) * (13*31^2 - P_max^2) / 3
+        Psi_p0   = (3/2) * (13^2*31 + P_max^2) / 12
+        Psi_n0   = (3/2) * (13*31 + P_min^2) * 12
+        Psi_mu0  = Psi_p0 / 4
+        Psi_tau0 = Psi_p0
+
+    The residual terms are stored separately.  Their signs are applied
+    only when the observable formulas construct the effective indices:
+
+        Psi_e_eff   = Psi_e0   - delta_e
+        Psi_p_eff   = Psi_p0   + delta_p
+        Psi_n_eff   = Psi_n0   - delta_n
+        Psi_mu_eff  = Psi_mu0  - delta_mu
+        Psi_tau_eff = Psi_tau0 + delta_tau
     """
     R = constants.R
     S = constants.S
 
-    # ---------------------------------------------------------------------------------------------------------
-    # Structural Psi table
-    #
-    # Common form:
-    #
-    #     Ψ0 = coefficient * (core + correction) * normalization
-    #
-    # ---------------------------------------------------------------------------------------------------------
-    # sector    coefficient         core term           correction term             normalization
-    # ---------------------------------------------------------------------------------------------------------
-    # electron    (1/2)·3              R·S^2              -7^2 / (6·24^2)           2·24^2
-    # proton      (1/2)·3              R^2 S              +7^2 / (6^2·24)           3·24
-    # neutron     (1/2)·3              R·S                +2^2 / (6·24)             3·24^2
-    # muon        (3/2)·3              R^2 S              +7^2 / (6^2·24)           24/4
-    # tau         (3/4)·3              R^2 S              +7^2 / (6^2·24)           2·24
-    # ---------------------------------------------------------------------------------------------------------
-    psi_table = {
-        "psi_e"  : PsiRow(Fraction(3, 2), R *    S**2, -Fraction(7**2, 6    * 24**2), Fraction(2 * 24**2)),
-        "psi_p"  : PsiRow(Fraction(3, 2), R**2 * S,     Fraction(7**2, 6**2 * 24   ), Fraction(3 * 24   )),
-        "psi_n"  : PsiRow(Fraction(3, 2), R *    S,     Fraction(2**2, 6    * 24   ), Fraction(3 * 24**2)),
-        "psi_mu" : PsiRow(Fraction(9, 2), R**2 * S,     Fraction(7**2, 6**2 * 24   ), Fraction(    24/4 )),
-        "psi_tau": PsiRow(Fraction(9, 4), R**2 * S,     Fraction(7**2, 6**2 * 24   ), Fraction(2 * 24   )),
-    }
+    # Integer cores inherited from the fixed ratios.
+    core_13 = R * 6
+    core_31 = S * 24
 
-    # ---------------------------------------------------------------------------------------------------------
-    # Structural backbone values Ψ0.
-    # ---------------------------------------------------------------------------------------------------------
-    psi_0 = {
-        name: row.value()
-        for name, row in psi_table.items()
-    }
+    # Structural backbone values Psi_0.
+    psi_e0   = Fraction(3, 2) * (core_13    * core_31**2 - P_MAX**2) / 3
+    psi_p0   = Fraction(3, 2) * (core_13**2 * core_31    + P_MAX**2) / 12
+    psi_n0   = Fraction(3, 2) * (core_13    * core_31    + P_MIN**2) * 12
+    psi_mu0  = Fraction(psi_p0, P_MIN**2)
+    psi_tau0 = psi_p0
 
-    # ---------------------------------------------------------------------------------------------------------
-    # Residual structural fluctuation terms δψ.
-    #
-    # Sign convention
-    # ---------------
-    # The sign is included in the final Ψ construction below.
-    #
-    #     Ψe   = Ψe0   - δψe
-    #     Ψp   = Ψp0   + δψp
-    #     Ψn   = Ψn0   - δψn
-    #     Ψmu  = Ψmu0  - δψmu
-    #     Ψtau = Ψtau0 + δψtau
-    #
-    # Each δψ is treated as a fixed sector-dependent fluctuation correction,
-    # not as an adjustable parameter.
-    #
-    # e   : stabilizing negative fluctuation
-    # p   : nearly cancelled mixed fluctuation
-    # n   : composite deep fluctuation
-    # mu  : positive excited-state fluctuation
-    # tau : saturated heavy-sector fluctuation
-    # ---------------------------------------------------------------------------------------------------------
-
-    # electron:
-    # minimal stabilizing residual
-    #
-    #     δψe = 1/2 + 1/5^2
-    delta_e = (
-          Fraction(1, 2)
-        + Fraction(1, 5**2)
-    )
-
-    # proton:
-    # tiny mixed residual
-    #
-    #     δψp = 1 / (R·S^2 * 2·24 - 1/6^2)
-    #
-    # This produces a near-cancelled positive correction,
-    # consistent with proton-sector near stability.
-    delta_p = Fraction(1, 
-          R * S**2 * (2*24)
-        - Fraction(1, 6**2)
-    )
-
-    # neutron:
-    # large composite residual
-    #
-    #     δψn = 2/(3 + (8·12)/(Ψp0 + 3))
-    #
-    # This is subtracted from Ψn0 in the final effective Ψn.
-    delta_n = 2/(3 + (8*12)/(psi_0["psi_p"] + 3))
-
-    # muon:
-    # positive excited-state residual
-    #
-    #     δψmu = 1/2 - 1/7^2 + Ψmu*7^2
-    delta_mu = (
-          Fraction(1, 2)
-        - Fraction(1, 7**2)
-        + Fraction(1, psi_0["psi_mu"] * 7**2)
-    )
-
-    # tau:
-    # saturated heavy-sector residual
-    #
-    #     δψtau = 1
+    # Residual structural fluctuations delta_psi.
+    # delta_e   = 1/2 + 1/P_mid^2
+    # delta_p   = 6^2 * (Psi_p0 + 24 - 1/2)^(-1)
+    # delta_n   = (3/2) * (12 * P_max - 1) * (12 * P_max + 3)^(-1)
+    # delta_mu  = 1/2 - 1/P_max^2 + 1/(Psi_mu0*P_max^2)
+    # delta_tau = 1
+    delta_e   = Fraction(1, 2) + Fraction(1, P_MID**2)
+    delta_p   = Fraction(6**2) * Fraction(1, psi_e0 + 24 - Fraction(1, 2))
+    delta_n   = Fraction(2, 3) * Fraction(12*P_MAX - 1, 12*P_MAX + 3)
+    delta_mu  = Fraction(1, 2) - Fraction(1, P_MAX**2) + Fraction(1, (psi_mu0 * P_MAX**2))
     delta_tau = Fraction(1, 1)
 
-    # ---------------------------------------------------------------------------------------------------------
-    # Final effective Ψ values.
-    # ---------------------------------------------------------------------------------------------------------
-    psi_values = {
-        "psi_e"  : psi_0["psi_e"],
-        "psi_p"  : psi_0["psi_p"],
-        "psi_n"  : psi_0["psi_n"],
-        "psi_mu" : psi_0["psi_mu"],
-        "psi_tau": psi_0["psi_tau"],
-    }
-
     return PsiValues(
-        **psi_values,
+        psi_e=psi_e0,
+        psi_p=psi_p0,
+        psi_n=psi_n0,
+        psi_mu=psi_mu0,
+        psi_tau=psi_tau0,
         delta_e=delta_e,
         delta_p=delta_p,
         delta_n=delta_n,
