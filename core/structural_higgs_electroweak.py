@@ -4,9 +4,7 @@ Zero Parameter Structure
 Copyright (c) 2026 Yasuo Tanaka
 Licensed under the MIT License.
 
-Paper 6 structural formulas for the Higgs, electroweak,
-Yukawa, and strong-coupling scale relations.
-
+This work is presented as a translation of underlying physical structure.
 No free parameters. No tuning. Only structure.
 """
 

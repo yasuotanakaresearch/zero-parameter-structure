@@ -95,7 +95,7 @@ R = \frac{13}{6},
 S = \frac{31}{24}.
 ```
 
-These branches are used across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, and Higgs, electroweak, Yukawa, and strong-coupling scale relations.
+These branches are used across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
 
 The repository provides reproducible Python implementations and paper-level numerical comparisons for the **Structural Origin of** series.
 
@@ -115,6 +115,7 @@ The same fixed branches are carried unchanged across different sectors:
 - quark-mass hierarchy
 - neutrino mass relations
 - Higgs, electroweak, Yukawa, and strong-coupling scale relations
+- cosmological and local kinematic scales
 
 The central question is whether a common fixed structure can organize numerical relations across particle physics, gravity, and cosmology without observable-by-observable tuning.
 
@@ -165,6 +166,14 @@ S
 \frac{31}{24}.
 ```
 
+The common structural scale inherited across the electromagnetic and cosmological sectors is
+
+```math
+\chi_{\mathrm{st}}
+=
+\frac{3R^2}{S}.
+```
+
 These definitions are inherited unchanged by all subsequent structural relations.
 
 ---
@@ -180,6 +189,7 @@ The current public release includes:
 - Quark-mass hierarchy
 - Neutrino mass relations
 - Higgs, electroweak, Yukawa, and strong-coupling scale relations
+- Cosmological and local kinematic scales
 
 ### Cosmology
 
@@ -310,10 +320,7 @@ The inverse electromagnetic coupling is then
 ```math
 \alpha^{-1}
 =
-4\pi
-\left(
-\frac{3R^2}{S}
-\right)
+4\pi\chi_{\mathrm{st}}
 \left(
 1+\frac{1}{\Psi_e^{\mathrm{eff}}}
 \right).
@@ -690,6 +697,105 @@ Finally, the structural boundary value of the strong coupling is
 1-\frac{m_W}{m_Z}.
 ```
 
+### Cosmological and Local Kinematic Scales
+
+Using the common structural scale $\chi_{\mathrm{st}}$ and the inherited effective electron index,
+the physical baryon density parameter and structural Hubble scale are written as
+
+```math
+\Omega_{b,\mathrm{st}}
+=
+\frac{1}{3R^2+3R},
+\qquad
+\omega_{\mathrm{st}}
+=
+\frac{4\pi\chi_{\mathrm{st}}}
+{\Psi_e^{\mathrm{eff}}},
+```
+
+```math
+H_{\mathrm{st}}
+=
+100
+\sqrt{
+\frac{\omega_{\mathrm{st}}}
+{\Omega_{b,\mathrm{st}}}
+}
+\ \mathrm{km\,s^{-1}\,Mpc^{-1}}.
+```
+
+The corresponding local distance-ladder scale is
+
+```math
+H_{\mathrm{ladder,st}}
+=
+\left(
+\frac{R}{2}
+\right)
+H_{\mathrm{st}}.
+```
+
+For the time, acceleration, closure, and velocity relations,
+$H_{\mathrm{st}}$ is first converted to SI units:
+
+```math
+H_{\mathrm{st}}^{\mathrm{SI}}
+=
+H_{\mathrm{st}}
+\frac{10^3}{\mathrm{Mpc}}
+\ \mathrm{s^{-1}}.
+```
+
+The structural time and acceleration scales are then
+
+```math
+T_{\alpha,\mathrm{st}}
+=
+\chi_{\mathrm{st}}
+\left(
+H_{\mathrm{st}}^{\mathrm{SI}}
+\right)^{-1},
+\qquad
+a_{\mathrm{st}}
+=
+2c
+T_{\alpha,\mathrm{st}}^{-1}.
+```
+
+The speed-of-light closure relation is
+
+```math
+c
+=
+\frac{1}{2}
+a_{\mathrm{st}}
+\chi_{\mathrm{st}}
+\left(
+H_{\mathrm{st}}^{\mathrm{SI}}
+\right)^{-1}.
+```
+
+The corresponding Local Sheet velocity scale is
+
+```math
+v_{\mathrm{LS,st}}
+=
+\frac{1}{8}
+a_{\mathrm{st}}
+\chi_{\mathrm{st}}^{-1}
+\left(
+H_{\mathrm{st}}^{\mathrm{SI}}
+\right)^{-1}.
+```
+
+---
+
+## Structural Lineage Map
+
+The following diagram summarizes the inheritance, dependency,
+duality, and cross-sector correspondence of the common structural branches.
+
+![Structural lineage map showing cross-sector inheritance, dependency, duality, and correspondence](assets/structural-lineage-map.png)
 
 ---
 
@@ -765,7 +871,45 @@ Detailed numerical outputs are reproduced by running the corresponding paper scr
 | $m_Z$ [GeV] | 91.187519 | 91.187600 | -0.000089 % | — |
 | $\alpha_s(m_Z)$ | 0.118646014 | 0.118000000 | +0.547469 % | +0.717793 |
 
-Full results can be reproduced with:
+### Cosmological and Local Kinematic Scales
+
+| Quantity | Structural value | Reference value | Relative difference | σ |
+|---|---:|---:|---:|---:|
+| $H_{\mathrm{st}}$ $[\mathrm{km\,s^{-1}\,Mpc^{-1}}]$ | 67.327754811 | 67.32[^1] | +0.011519 % | — |
+| $H_{\mathrm{ladder,st}}$ $[\mathrm{km\,s^{-1}\,Mpc^{-1}}]$ | 72.938401045 | $73.04\pm1.04$[^2] | -0.139100 % | -0.097691 |
+| $a_{\mathrm{st}}$ $[\mathrm{m\,s^{-2}}]$ | $1.199884047\times10^{-10}$ | $1.20\times10^{-10}$[^3] | -0.009663 % | — |
+| $v_{\mathrm{LS,st}}$ $[\mathrm{km\,s^{-1}}]$ | 630.450072078 | $631\pm20$[^4] | -0.087152 % | -0.027496 |
+
+[^1]: Planck 2018 base-$\Lambda$CDM Plik best-fit value.
+[^2]: SH0ES Cepheid–SN Ia distance-ladder measurement.
+[^3]: Radial-acceleration-relation characteristic scale. The source separately quotes random and systematic uncertainties.
+[^4]: Local Sheet velocity relative to the CMB frame.
+
+Full results can be reproduced through the interactive paper launcher:
+
+```bash
+python run_papers.py
+```
+
+The launcher supports a single paper, multiple papers, ranges, or all papers:
+
+```text
+1
+1 3 7
+1-4
+a
+```
+
+Paper selections can also be passed directly from the command line:
+
+```bash
+python run_papers.py 2
+python run_papers.py 1 3 7
+python run_papers.py 1-4
+python run_papers.py --all
+```
+
+Individual paper modules remain directly executable:
 
 ```bash
 python -m code.paper1_cosmology
@@ -774,6 +918,7 @@ python -m code.paper3_gravity
 python -m code.paper4_quark_mass
 python -m code.paper5_neutrino
 python -m code.paper6_higgs_electroweak
+python -m code.paper7_cosmological_kinematics
 ```
 
 ---
@@ -782,7 +927,6 @@ python -m code.paper6_higgs_electroweak
 
 Additional structural relations are under active development:
 
-- Cosmological and local kinematic scale relations
 - Further consistency checks across particle, gravity, and cosmological sectors
 
 Further results will be released incrementally as part of the paper series.
@@ -796,8 +940,10 @@ zero-parameter-structure/
 ├── core/
 ├── code/
 ├── observed_data/
+├── assets/
 ├── example.py
 ├── example.ipynb
+├── run_papers.py
 ├── CONCEPT.md
 └── README.md
 ```
@@ -825,6 +971,23 @@ A dependency-free end-to-end example that computes cosmological density relation
 An interactive Jupyter Notebook version of the end-to-end example. It presents each physical sector in separate Markdown and Python cells so that the structural equations, intermediate quantities, and final numerical values can be examined step by step.
 
 The notebook can be opened and executed directly in Google Colab without installing Python or Jupyter locally. This provides a browser-based execution path for environments where a local development setup is unavailable.
+
+### `run_papers.py`
+
+An interactive launcher for the paper-level scripts. It allows one or more papers to be selected without manually entering each module command.
+
+```bash
+python run_papers.py
+```
+
+It also supports direct command-line selection:
+
+```bash
+python run_papers.py 1
+python run_papers.py 1 3 7
+python run_papers.py 1-4
+python run_papers.py --all
+```
 
 ---
 
@@ -914,8 +1077,7 @@ python -m code.paper5_neutrino
 
 ### Paper 6 — Higgs, Electroweak, and Strong Coupling
 
-**Structural Origin of Higgs, Electroweak,
-and Strong-Coupling Scale Relations**
+**Structural Origin of Higgs, Electroweak, and Strong-Coupling Scale Relations**
 
 - https://doi.org/10.5281/zenodo.21429612
 
@@ -923,6 +1085,20 @@ Corresponding code:
 
 ```bash
 python -m code.paper6_higgs_electroweak
+```
+
+---
+
+### Paper 7 — Cosmological and Local Kinematic Scales
+
+**Structural Origin of Cosmological and Local Kinematic Scales**
+
+- https://doi.org/10.5281/zenodo.21455596
+
+Corresponding code:
+
+```bash
+python -m code.paper7_cosmological_kinematics
 ```
 
 ---
@@ -949,6 +1125,23 @@ With JupyterLab:
 
 ```bash
 jupyter lab example.ipynb
+```
+
+### Run the paper scripts interactively
+
+```bash
+python run_papers.py
+```
+
+Select one paper, multiple papers, a range, or all papers from the displayed menu.
+
+The same selections can be supplied directly:
+
+```bash
+python run_papers.py 1
+python run_papers.py 1 3 7
+python run_papers.py 1-4
+python run_papers.py --all
 ```
 
 ### Run the command-line example

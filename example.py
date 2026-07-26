@@ -31,6 +31,7 @@ import math
 c = 299792458       # exact, m/s
 h = 6.62607015e-34  # exact, J s
 hbar = h / (2 * math.pi)
+AU_M = 149597870700
 
 
 # =========================================================
@@ -216,6 +217,26 @@ alpha_s_mZ  = 1 - mW_GeV / mZ_GeV
 
 
 # =========================================================
+# Cosmological and Local Kinematic Scales
+# =========================================================
+
+chi_st   = 3 * R**2 / S
+Omega_b  = 1 / (3 * R**2 + 3 * R)
+omega_st = 4 * math.pi * chi_st / psi_e
+H_st     = 100 * (omega_st / Omega_b)**0.5  # km/s/Mpc
+
+Mpc_m    = (AU_M * 60**2 / (math.pi / 180.0)) * 10**6
+H_st_si  = H_st * 10**3 / Mpc_m
+
+H_ladder_st = (R / 2) * H_st
+T_alpha_st  = chi_st * H_st_si**-1
+a_st        = 2 * c * T_alpha_st**-1
+
+c_closure = Fraction(1, 2) * a_st * chi_st     * H_st_si**-1
+v_LS_st   = Fraction(1, 8) * a_st * chi_st**-1 * H_st_si**-1
+
+
+# =========================================================
 # Output
 # =========================================================
 
@@ -322,6 +343,20 @@ def main() -> None:
         ("m_W", mW_GeV, "GeV", ".12f"),
         ("m_Z", mZ_GeV, "GeV", ".12f"),
         ("alpha_s(m_Z)", alpha_s_mZ, "", ".12f"),
+    ])
+    print()
+
+    print("Cosmological and Local Kinematic Scales")
+    print("----------------------------------------------")
+    print_rows([
+        ("chi_st", chi_st, "", ".12f"),
+        ("omega_st", omega_st, "", ".12f"),
+        ("H_st", H_st, "km/s/Mpc", ".12f"),
+        ("H_ladder_st", H_ladder_st, "km/s/Mpc", ".12f"),
+        ("T_alpha_st", T_alpha_st, "s", ".12e"),
+        ("a_st", a_st, "m/s^2", ".12e"),
+        ("c_closure", c_closure / 1000, "km/s", ".3f"),
+        ("v_LS_st", v_LS_st / 1000, "km/s", ".3f"),
     ])
     print()
 
