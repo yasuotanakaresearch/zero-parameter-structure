@@ -99,13 +99,14 @@ class QuarkMassResults:
 
 def base_ratio(constants: StructuralConstants) -> Fraction:
     """
-    Common quark-mass base ratio.
+    Return the inherited common quark branch.
 
-        M0 / me = 3R^2 S
+        B_q = 3R^2 S
+
+    The function name is retained for compatibility with the existing
+    paper-level output code.
     """
-    R = constants.R
-    S = constants.S
-    return 3 * R**2 * S
+    return constants.B_q
 
 
 def propagation_factor(
@@ -113,19 +114,18 @@ def propagation_factor(
     u_selector: int,
 ) -> Decimal:
     """
-    Unified propagation/projection factor.
+    Common branch propagation factor.
 
-        F(u) = 8 π^u R^(u+1) / S
+        A_q = A_d (pi R)^u
 
     where:
-    - u = 0 gives the down-type factor 8R/S
-    - u = 1 gives the up-type factor 8πR^2/S
+        u = 0 -> A_d
+        u = 1 -> A_u = pi R A_d
     """
-    R = fraction_to_decimal(constants.R)
-    S = fraction_to_decimal(constants.S)
-    u = int(u_selector)
+    A_d = fraction_to_decimal(constants.A_d)
+    R   = fraction_to_decimal(constants.R)
 
-    return Decimal(8) * (PI ** u) * (R ** (u + 1)) / S
+    return A_d * (PI * R) ** u_selector
 
 
 def quark_mass_ratio(
@@ -135,7 +135,10 @@ def quark_mass_ratio(
     """
     Unified structural quark-mass ratio.
 
-        mq / me = Kq (3R^2 S) [8 π^u R^(u+1) / S]^n
+        m_q / m_e = K_q B_q A_q^n
+
+    The common B_q and A_d branches are inherited from
+    StructuralConstants; A_u is generated from A_d by πR.
     """
     k = fraction_to_decimal(row.k_value)
     base = fraction_to_decimal(base_ratio(constants))

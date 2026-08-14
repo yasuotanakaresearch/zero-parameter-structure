@@ -95,7 +95,25 @@ R = \frac{13}{6},
 S = \frac{31}{24}.
 ```
 
-These branches are used across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
+In Version 3 of the foundational note, these ratios are no longer introduced only through the earlier path-count representation. A candidate finite-geometric realization is added in which the shell-symmetry condition
+
+```math
+q^c-q^b
+=
+\left|\mathrm{AGL}(a,q)\right|,
+\qquad
+1\le a<b<c,
+```
+
+uniquely selects
+
+```math
+(q,a,b,c)=(2,2,3,5).
+```
+
+The same binary structure produces the nonzero-state counts `3`, `7`, and `31`, the layer decomposition `3 | 4 | 24`, and the fixed structural ratios used throughout the repository.
+
+These branches are carried unchanged across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
 
 The repository provides reproducible Python implementations and paper-level numerical comparisons for the **Structural Origin of** series.
 
@@ -103,9 +121,31 @@ The repository provides reproducible Python implementations and paper-level nume
 
 ## Research Concept
 
-This repository follows a minimal structural approach based on fixed dimensionless ratios and direct numerical comparison with reference values.
+The framework separates three levels explicitly:
 
-The fixed `R`- and `S`-branches are interpreted as structural ratios associated with a causal-path interpretation consistent with the causal structure of general relativity.
+1. minimal structural assumptions,
+2. a candidate finite-geometric realization,
+3. sector-specific physical relations constructed from the resulting fixed ratios.
+
+The finite-geometric realization uses the unique solution
+
+```math
+(q,a,b,c)=(2,2,3,5)
+```
+
+of the shell-symmetry condition above. In the binary realization,
+
+```math
+\mathbb{F}_2^2
+\subset
+\mathbb{F}_2^3
+\subset
+\mathbb{F}_2^5,
+```
+
+the state counts are fixed rather than fitted. The ratios `R` and `S` are then interpreted as common structural ratios generated within this realization.
+
+This finite geometry is used as a structural representation; it is not identified with physical spacetime and does not replace standard general relativity or quantum field theory. The causal interpretation of the framework is intended to remain compatible with standard relativistic causal structure.
 
 The same fixed branches are carried unchanged across different sectors:
 
@@ -138,24 +178,110 @@ They are reconstructed from a common fixed structure.
 
 ## Common Structural Definitions
 
-All sectors use the same fixed path values:
+### Finite-geometric backbone
+
+Version 3 of the foundational note uses a candidate finite-geometric realization in which
+
+```math
+q^c-q^b
+=
+\left|\mathrm{AGL}(a,q)\right|,
+\qquad
+1\le a<b<c.
+```
+
+The unique finite-field and dimension solution is
+
+```math
+(q,a,b,c)=(2,2,3,5).
+```
+
+The corresponding nested binary spaces are
+
+```math
+\mathbb{F}_2^2
+\subset
+\mathbb{F}_2^3
+\subset
+\mathbb{F}_2^5.
+```
+
+For the first inclusion,
+
+```math
+\mathbb{F}_2^3
+=
+\{0\}
+\sqcup
+\left(\mathbb{F}_2^2\setminus\{0\}\right)
+\sqcup
+\left(\mathbb{F}_2^3\setminus\mathbb{F}_2^2\right),
+```
+
+with cardinalities
+
+```math
+1\,|\,3\,|\,4.
+```
+
+This gives the legacy structural interface in the form
 
 ```math
 P_{\min}=1+1=2,
 \qquad
-P_{\max}=3+4=7,
+P_{\mathrm{mid}}=1+4=5,
 \qquad
-P_{\mathrm{mid}}=P_{\max}-P_{\min}=5.
+P_{\max}=3+4=7.
 ```
 
-The common `R`- and `S`-branches are generated from these path values:
+The earlier identity
+
+```math
+P_{\mathrm{mid}}
+=
+P_{\max}-P_{\min}
+=
+5
+```
+
+remains numerically valid, but is treated as a compatibility identity rather than the defining relation for `P_mid`.
+
+The higher binary space gives
+
+```math
+2^5-1=31,
+\qquad
+2^3-1=7,
+\qquad
+2^5-2^3=24.
+```
+
+The ratio `S` is the total-to-outer-shell normalization
+
+```math
+S
+=
+\frac{2^5-1}{2^5-2^3}
+=
+\frac{31}{24}.
+```
+
+The ratio `R` is the unique common value of the projective-incidence and affine-action normalizations at `q=2`:
 
 ```math
 R
 =
-2\left(
-1+\frac{P_{\min}}{24}
-\right)
+2+\frac{1}{q(q+1)}
+=
+\frac{13}{6}.
+```
+
+The earlier forms are recovered exactly:
+
+```math
+R
+=
+2\left(1+\frac{P_{\min}}{24}\right)
 =
 \frac{13}{6},
 \qquad
@@ -166,15 +292,116 @@ S
 \frac{31}{24}.
 ```
 
-The common structural scale inherited across the electromagnetic and cosmological sectors is
+Thus the existing sector-level interface is preserved while the foundational construction is strengthened.
+
+### Derived common branch structure
+
+The four common branch quantities are defined compactly by
 
 ```math
-\chi_{\mathrm{st}}
+\begin{pmatrix}
+B_{\alpha} & B_q \\
+A_d & A_{\tau}
+\end{pmatrix}
 =
-\frac{3R^2}{S}.
+\begin{pmatrix}
+3R^2 \\
+8R
+\end{pmatrix}
+\begin{pmatrix}
+S^{-1} & S
+\end{pmatrix}.
 ```
 
-These definitions are inherited unchanged by all subsequent structural relations.
+Expanding the matrix gives
+
+```math
+B_{\alpha}=\frac{3R^2}{S},
+\qquad
+B_q=3R^2S,
+\qquad
+A_d=\frac{8R}{S},
+\qquad
+A_{\tau}=8RS.
+```
+
+The factorization implies
+
+```math
+\frac{B_q}{B_{\alpha}}
+=
+\frac{A_{\tau}}{A_d}
+=
+S^2,
+\qquad
+B_{\alpha}A_{\tau}
+=
+B_qA_d
+=
+24R^3.
+```
+
+The up-branch amplification factor can be written in either form
+
+```math
+A_u
+=
+\pi R A_d
+=
+\frac{8\pi R^2}{S}
+=
+\frac{8\pi}{3}B_{\alpha}.
+```
+
+These branch quantities are derived algebraic descendants of `R` and `S`, not additional independent structural inputs. They provide the common interface to the sector-specific relations below.
+
+**Structure map — Finite-Geometric and Common Branch Structure**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph FiniteGeometry["Candidate Finite-Geometric Realization"]
+        U["qᶜ − qᵇ = |AGL(a,q)|"]
+        D["(q,a,b,c) = (2,2,3,5)"]
+        L["1 | 3 | 4,  3 | 4 | 24"]
+        P["Pmin = 2,  Pmid = 5,  Pmax = 7"]
+    end
+
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+        S["S = 31/24"]
+    end
+
+    subgraph CommonBranch["Derived Common Branch Structure"]
+        branch_matrix["[Bα  Bq; Ad  Aτ] = [3R²; 8R] [S⁻¹  S]"]
+        Balpha["Bα = 3R²/S"]
+        Bq["Bq = 3R²S"]
+        Ad["Ad = 8R/S"]
+        Atau["Aτ = 8RS"]
+        Au["Au = πRAd = (8π/3)Bα"]
+    end
+
+    U --> D
+    D --> L
+    L --> P
+    D --> R
+    D --> S
+    R --> branch_matrix
+    S --> branch_matrix
+    branch_matrix --> Balpha
+    branch_matrix --> Bq
+    branch_matrix --> Ad
+    branch_matrix --> Atau
+    Ad --> Au
+```
 
 ---
 
@@ -211,10 +438,50 @@ These relations imply the compact consistency relation
 \Omega_m^2 = 3\Omega_\Lambda\Omega_b.
 ```
 
+**Structure map — Cosmological Density Structure**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+    end
+
+    Phi_m["Φm = 1/R"]
+    Phi_b["Φb = 1/(3R²)"]
+
+    subgraph Cosmology["Cosmology"]
+        Omage_L["ΩΛ = 3R²Ωb"]
+        Omage_m["Ωm = 3RΩb"]
+        Omage_b["Ωb = 1/(3R² + 3R)"]
+        Omage_m2["Ωm² = 3ΩΛΩb"]
+    end
+
+    R --> Phi_m
+    R --> Phi_b
+    R --> Omage_L
+    R --> Omage_m
+    R --> Omage_b
+    Omage_L --> Omage_m2
+    Omage_m --> Omage_m2
+    Omage_b --> Omage_m2
+    Phi_m <--> Omage_m
+    Phi_b <--> Omage_b
+
+    linkStyle 8,9 stroke:#FF0000
+```
 
 ### Electromagnetic Coupling and Mass Hierarchy
 
-The effective structural indices are generated from the common path values above through fixed backbone values and residual structural corrections.
+The effective structural indices are generated from the common structural values above through fixed backbone values and residual structural corrections.
 
 The backbone values are
 
@@ -320,7 +587,7 @@ The inverse electromagnetic coupling is then
 ```math
 \alpha^{-1}
 =
-4\pi\chi_{\mathrm{st}}
+4\pi B_{\alpha}
 \left(
 1+\frac{1}{\Psi_e^{\mathrm{eff}}}
 \right).
@@ -331,20 +598,14 @@ The charged-particle mass ratios are then written as
 ```math
 \frac{m_p}{m_e}
 =
-\alpha^{-1}
-\left(
-\frac{8R}{S}
-\right)
+\alpha^{-1}A_d
 \left(
 1-\frac{1}{\Psi_p^{\mathrm{eff}}}
 \right),
 \qquad
 \frac{m_n}{m_e}
 =
-\alpha^{-1}
-\left(
-\frac{8R}{S}
-\right)
+\alpha^{-1}A_d
 \left(
 1-\frac{1}{\Psi_n^{\mathrm{eff}}}
 \right),
@@ -356,10 +617,7 @@ The charged-particle mass ratios are then written as
 \left(
 \frac{3}{2}
 \right)
-4\pi
-\left(
-\frac{3R^2}{S}
-\right)
+4\pi B_{\alpha}
 \left(
 1+\frac{1}{\Psi_\mu^{\mathrm{eff}}}
 \right),
@@ -369,7 +627,7 @@ The charged-particle mass ratios are then written as
 \left(
 \frac{3}{4}
 \right)
-(8RS)
+A_{\tau}
 \left(
 1+\frac{1}{\Psi_\tau^{\mathrm{eff}}}
 \right),
@@ -408,6 +666,56 @@ m_e c^2
 \ \mathrm{MeV}.
 ```
 
+**Structure map — Electromagnetic and Charged-Particle Structure**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph CommonBranch["Common Branch Structure"]
+        branch_matrix["[Bα  Bq; Ad  Aτ] = [3R²; 8R] [S⁻¹  S]"]
+        Balpha["Bα = 3R²/S"]
+        Ad["Ad = 8R/S"]
+        Atau["Aτ = 8RS"]
+    end
+
+    subgraph Electron["Electron structure"]
+        alpha["α⁻¹ = 4πBα(1 + 1/Ψe_eff)"]
+        mn_me["mn/me = α⁻¹Ad(1 − 1/Ψn_eff)"]
+        mp_me["mp/me = α⁻¹Ad(1 − 1/Ψp_eff)"]
+        mmu_me["mμ/me = (3/2)4πBα(1 + 1/Ψμ_eff)"]
+        mtau_mmu["mτ/mμ = (3/4)Aτ(1 + 1/Ψτ_eff)"]
+        mtau_me["mτ/me = (mτ/mμ)(mμ/me)"]
+    end
+
+    subgraph Quark["Quark"]
+        Kq["(Ku,Kd,Kc,Ks,Kt,Kb) = (1/(2R), 1/2, 1+1/2, 1−1/4, 2+1/(2R), 2+1/2)"]
+    end
+
+    branch_matrix --> Balpha
+    branch_matrix --> Ad
+    branch_matrix --> Atau
+    Balpha --> alpha
+    Balpha --> mmu_me
+    Ad --> mn_me
+    Ad --> mp_me
+    Atau --> mtau_mmu
+    alpha --> mn_me
+    alpha --> mp_me
+    mmu_me --> mtau_me
+    mtau_mmu --> mtau_me
+    Kq --> |"Kc = 3/2"| mmu_me
+    Kq --> |"Ks = 3/4"| mtau_mmu
+```
+
 ### Gravity
 
 The gravity-sector structural indices are
@@ -415,7 +723,10 @@ The gravity-sector structural indices are
 ```math
 \Psi_G
 =
-\frac{12(3R^2)(4R)+2R}{4},
+8R
+\left[
+(3R)(3S)-P_{\min}^2
+\right],
 \qquad
 \Psi_{G0}
 =
@@ -432,18 +743,40 @@ RS^2(12\cdot24),
 \right).
 ```
 
-Using the inherited electromagnetic coupling, the gravitational constant is represented by
+Using the inherited electromagnetic coupling and the common branch
+
+```math
+A_d=\frac{8R}{S},
+```
+
+the gravitational relation is written as
+
+```math
+G^{-1/2}
+=
+\alpha^{-1}
+A_d
+\pi
+\left[
+(3R)(3S)-P_{\min}^2
+\right].
+```
+
+Equivalently,
 
 ```math
 \sqrt{G}
 =
-\frac{\alpha S}{\pi\Psi_G},
+\left\{
+\alpha^{-1}
+A_d
+\pi
+\left[
+(3R)(3S)-P_{\min}^2
+\right]
+\right\}^{-1},
 \qquad
-G
-=
-\left(
-\frac{\alpha S}{\pi\Psi_G}
-\right)^2.
+G=(\sqrt{G})^2.
 ```
 
 The SI mass scales are connected through
@@ -480,6 +813,55 @@ M_{\mathrm{Pl}}
 \right)^{-1/2}.
 ```
 
+**Structure map — Gravity-Sector Inheritance**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+        S["S = 31/24"]
+        Pmin["Pmin = 2"]
+    end
+
+    subgraph CommonBranch["Common Branch Structure"]
+        Ad["Ad = 8R/S"]
+    end
+
+    subgraph Electron["Electron structure"]
+        alpha["α⁻¹ = 4πBα(1 + 1/Ψe_eff)"]
+        mp_me["mp/me = α⁻¹Ad(1 − 1/Ψp_eff)"]
+    end
+
+    subgraph Gravity["Gravity"]
+        Ginv["G⁻¹⁄² = α⁻¹Adπ[(3R)(3S) − Pmin²]"]
+        M_p["Mp = MPl α¹²(mp/me)²(1 + 1/ΨG*)⁻¹⁄²"]
+        M_e["Me = MPl α¹²(mp/me)(1 + 1/ΨG*)⁻¹⁄²"]
+    end
+
+    R --> Ad
+    S --> Ad
+    R --> Ginv
+    S --> Ginv
+    Pmin --> Ginv
+    Ad --> Ginv
+    alpha --> mp_me
+    alpha --> Ginv
+    alpha --> M_p
+    alpha --> M_e
+    mp_me --> M_p
+    mp_me --> M_e
+```
+
 ### Quark Masses
 
 The quark masses are generated by the unified relation
@@ -511,8 +893,11 @@ Equivalently,
 ```math
 A_d = \frac{8R}{S},
 \qquad
-A_u = \frac{8\pi R^2}{S}.
+A_u = \frac{8\pi R^2}{S}
+= \frac{8\pi}{3}B_{\alpha}.
 ```
+
+Here, $A_d$ is the down-branch amplification factor. Its additional appearance in the proton and neutron relations above is treated as the same quark-sector structural connection at the common nucleon scale, rather than as a constituent-counting rule.
 
 The structural coefficients are written directly as
 
@@ -538,6 +923,48 @@ n_q =
 1 & (c,s), \\
 2 & (t,b).
 \end{cases}
+```
+
+**Structure map — Quark Mass Branch Structure**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+    end
+
+    subgraph CommonBranch["Common Branch Structure"]
+        branch_matrix["[Bα  Bq; Ad  Aτ] = [3R²; 8R] [S⁻¹  S]"]
+        Bq["Bq = 3R²S"]
+        Ad["Ad = 8R/S"]
+        Au["Au = πRAd = (8π/3)Bα"]
+    end
+
+    subgraph Quark["Quark"]
+        Aq["Aq = Au for q = u,c,t;  Ad for q = d,s,b"]
+        Kq["(Ku,Kd,Kc,Ks,Kt,Kb) = (1/(2R), 1/2, 1+1/2, 1−1/4, 2+1/(2R), 2+1/2)"]
+        mq_me["mq/me = Kq Bq Aqⁿ"]
+    end
+
+    R --> Kq
+    branch_matrix --> Bq
+    branch_matrix --> Ad
+    Ad --> Au
+    Ad --> Aq
+    Au --> Aq
+    Bq --> mq_me
+    Aq --> mq_me
+    Kq --> mq_me
 ```
 
 ### Neutrino Masses
@@ -601,6 +1028,63 @@ m_{\nu3}^2-m_{\nu2}^2,
 \sum m_\nu
 =
 m_{\nu1}+m_{\nu2}+m_{\nu3}.
+```
+
+**Structure map — Neutrino Mass Structure and Higgs Duality**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+        S["S = 31/24"]
+    end
+
+    subgraph Electron["Electron structure"]
+        alpha["α⁻¹ = 4πBα(1 + 1/Ψe_eff)"]
+    end
+
+    subgraph Neutrino["Neutrino"]
+        B_nu["Bν = 12S α²[2→0] = 12Sα⁴"]
+        m_nu["mν,n/me = Bν(n + Φn),  n = 0,1,2"]
+        Phi_0["Φ0 = 1"]
+        Phi_1["Φ1 = 1/(3R²)"]
+        Phi_2["Φ2 = 1/R"]
+    end
+
+    subgraph HiggsElectroweak["Higgs"]
+        B_H["BH = 12R α²[1→2] = 12Rα⁻²"]
+    end
+
+    Phi_m["Φm = 1/R"]
+    Phi_b["Φb = 1/(3R²)"]
+
+    R --> Phi_m
+    R --> Phi_b
+    S --> B_nu
+
+    Phi_m --> Phi_2
+    Phi_b --> Phi_1
+
+    alpha --> B_nu
+
+    Phi_0 --> m_nu
+    Phi_1 --> m_nu
+    Phi_2 --> m_nu
+    B_nu --> m_nu
+    B_nu <-->|structural duality| B_H
+
+    %% neutrino-Higgs structural duality
+    linkStyle 10 stroke:#FF0000
 ```
 
 ### Higgs, Electroweak, and Strong-Coupling Scales
@@ -697,9 +1181,66 @@ Finally, the structural boundary value of the strong coupling is
 1-\frac{m_W}{m_Z}.
 ```
 
+**Structure map — Higgs, Electroweak, and Strong-Coupling Structure**
+
+```mermaid
+---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph Common["Common Structure"]
+        R["R = 13/6"]
+    end
+
+    subgraph Electron["Electron structure"]
+        alpha["α⁻¹ = 4πBα(1 + 1/Ψe_eff)"]
+    end
+
+    subgraph Neutrino["Neutrino"]
+        B_nu["Bν = 12S α²[2→0] = 12Sα⁴"]
+    end
+
+    subgraph HiggsElectroweak["Higgs, Electroweak, and Strong-Coupling Scales"]
+        B_H["BH = 12R α²[1→2] = 12Rα⁻²"]
+        mH_me["mH/me = (1/2)BH + ΨH"]
+        v_me["v/me = BH − Ψv"]
+        y_e["ye = √2/(v/me) = √2 me/v"]
+        mW_me["mW/me = ye⁻¹/R (1 + 1/Ψv)"]
+        sin2theta_W["sin²θW = 2παR²(1 + 3⁻³)"]
+        mZ["mZ = mW/√(1 − sin²θW) = mW/cosθW"]
+        alpha_s["αs(mZ) = 1 − mW/mZ"]
+    end
+
+    R --> B_H
+    R --> mW_me
+    R --> sin2theta_W
+
+    B_nu <-->|structural duality| B_H
+
+    alpha --> B_H
+    alpha --> sin2theta_W
+
+    B_H --> mH_me
+    B_H --> v_me
+    v_me --> y_e
+    y_e --> mW_me
+    sin2theta_W --> mZ
+    mW_me --> alpha_s
+    mZ --> alpha_s
+
+    linkStyle 3 stroke:#FF0000
+```
+
 ### Cosmological and Local Kinematic Scales
 
-Using the common structural scale $\chi_{\mathrm{st}}$ and the inherited effective electron index,
+Using the common branch scale $B_{\alpha}$ and the inherited effective electron index,
 the physical baryon density parameter and structural Hubble scale are written as
 
 ```math
@@ -709,7 +1250,7 @@ the physical baryon density parameter and structural Hubble scale are written as
 \qquad
 \omega_{\mathrm{st}}
 =
-\frac{4\pi\chi_{\mathrm{st}}}
+\frac{4\pi B_{\alpha}}
 {\Psi_e^{\mathrm{eff}}},
 ```
 
@@ -751,7 +1292,7 @@ The structural time and acceleration scales are then
 ```math
 T_{\alpha,\mathrm{st}}
 =
-\chi_{\mathrm{st}}
+B_{\alpha}
 \left(
 H_{\mathrm{st}}^{\mathrm{SI}}
 \right)^{-1},
@@ -769,7 +1310,7 @@ c
 =
 \frac{1}{2}
 a_{\mathrm{st}}
-\chi_{\mathrm{st}}
+B_{\alpha}
 \left(
 H_{\mathrm{st}}^{\mathrm{SI}}
 \right)^{-1}.
@@ -782,20 +1323,60 @@ v_{\mathrm{LS,st}}
 =
 \frac{1}{8}
 a_{\mathrm{st}}
-\chi_{\mathrm{st}}^{-1}
+B_{\alpha}^{-1}
 \left(
 H_{\mathrm{st}}^{\mathrm{SI}}
 \right)^{-1}.
 ```
 
+**Structure map — Cosmological and Local Kinematic Structure**
+
+```mermaid
 ---
+config:
+  theme: 'base'
+  themeVariables:
+    primaryColor: '#000000'
+    primaryTextColor: '#ffffff'
+    primaryBorderColor: '#ffffff'
+    secondaryColor: '#0000ff'
+    lineColor: '#00ffff'
+---
+flowchart TB
+    subgraph CommonBranch["Common Branch Structure"]
+        Balpha["Bα = 3R²/S"]
+    end
 
-## Structural Lineage Map
+    subgraph Cosmology["Cosmology"]
+        Omage_b["Ωb = 1/(3R² + 3R)"]
+    end
 
-The following diagram summarizes the inheritance, dependency,
-duality, and cross-sector correspondence of the common structural branches.
+    subgraph CosmologicalKinematic["Cosmological and Local Kinematic Scales"]
+        omega_st["ωst = 4πBα/Ψe_eff"]
+        H_st["Hst = 100√(ωst/Ωb,st) km s⁻¹ Mpc⁻¹"]
+        H_ladder["Hladder,st = (R/2)Hst"]
+        T_st["Tα,st = Bα(Hst,SI)⁻¹"]
+        a_st["ast = 2c(Tα,st)⁻¹"]
+        c["c = (1/2)ast Bα(Hst,SI)⁻¹"]
+        v_LS["vLS,st = (1/8)ast Bα⁻¹(Hst,SI)⁻¹"]
+    end
 
-![Structural lineage map showing cross-sector inheritance, dependency, duality, and correspondence](assets/structural-lineage-map.png)
+    Balpha --> omega_st
+    Balpha --> T_st
+    Balpha --> c
+    Balpha --> v_LS
+
+    Omage_b --> H_st
+
+    omega_st --> H_st
+    H_st --> H_ladder
+    H_st --> T_st
+    H_st --> c
+    H_st --> v_LS
+    T_st --> a_st
+    a_st --> c
+    a_st --> v_LS
+```
 
 ---
 
@@ -875,12 +1456,12 @@ Detailed numerical outputs are reproduced by running the corresponding paper scr
 
 | Quantity | Structural value | Reference value | Relative difference | σ |
 |---|---:|---:|---:|---:|
-| $H_{\mathrm{st}}$ $[\mathrm{km\,s^{-1}\,Mpc^{-1}}]$ | 67.327754811 | 67.32[^1] | +0.011519 % | — |
-| $H_{\mathrm{ladder,st}}$ $[\mathrm{km\,s^{-1}\,Mpc^{-1}}]$ | 72.938401045 | $73.04\pm1.04$[^2] | -0.139100 % | -0.097691 |
-| $a_{\mathrm{st}}$ $[\mathrm{m\,s^{-2}}]$ | $1.199884047\times10^{-10}$ | $1.20\times10^{-10}$[^3] | -0.009663 % | — |
-| $v_{\mathrm{LS,st}}$ $[\mathrm{km\,s^{-1}}]$ | 630.450072078 | $631\pm20$[^4] | -0.087152 % | -0.027496 |
+| $H_{\mathrm{st}}$ [km s⁻¹ Mpc⁻¹] | 67.327754811 | 67.32[^1] | +0.011519 % | — |
+| $H_{\mathrm{ladder,st}}$ [km s⁻¹ Mpc⁻¹] | 72.938401045 | $73.04\pm1.04$[^2] | -0.139100 % | -0.097691 |
+| $a_{\mathrm{st}}$ [m s⁻²] | $1.199884047\times10^{-10}$ | $1.20\times10^{-10}$[^3] | -0.009663 % | — |
+| $v_{\mathrm{LS,st}}$ [km s⁻¹] | 630.450072078 | $631\pm20$[^4] | -0.087152 % | -0.027496 |
 
-[^1]: Planck 2018 base-$\Lambda$CDM Plik best-fit value.
+[^1]: Planck 2018 base-ΛCDM Plik best-fit value.
 [^2]: SH0ES Cepheid–SN Ia distance-ladder measurement.
 [^3]: Radial-acceleration-relation characteristic scale. The source separately quotes random and systematic uncertainties.
 [^4]: Local Sheet velocity relative to the CMB frame.
@@ -943,6 +1524,7 @@ zero-parameter-structure/
 ├── assets/
 ├── example.py
 ├── example.ipynb
+├── finite_geometric_verification.py
 ├── run_papers.py
 ├── CONCEPT.md
 └── README.md
@@ -972,6 +1554,16 @@ An interactive Jupyter Notebook version of the end-to-end example. It presents e
 
 The notebook can be opened and executed directly in Google Colab without installing Python or Jupyter locally. This provides a browser-based execution path for environments where a local development setup is unavailable.
 
+### `finite_geometric_verification.py`
+
+An exact-arithmetic verification script for the foundational finite-geometric construction. It checks the finite-field uniqueness search, binary layer counts, affine symmetry structure, orbit--stabilizer relations, and the `R` and `S` consistency relations.
+
+```bash
+python finite_geometric_verification.py
+```
+
+The script is a reproducibility check; the analytic uniqueness proof remains part of the foundational paper.
+
 ### `run_papers.py`
 
 An interactive launcher for the paper-level scripts. It allows one or more papers to be selected without manually entering each module command.
@@ -998,9 +1590,9 @@ python run_papers.py --all
 **Structural Origin of the Fixed Ratios R and S:  
 A Foundational Technical Note on Causal Paths and Structural Branches**
 
-- https://doi.org/10.5281/zenodo.21320197
+- https://doi.org/10.5281/zenodo.21931059
 
-This note defines the fixed `R`- and `S`-branches used as common inputs in the subsequent paper series.
+Version 3 substantially revises the construction of the fixed `R`- and `S`-branches. It introduces a candidate finite-geometric realization, proves the uniqueness of the binary dimension chain `(q,a,b,c)=(2,2,3,5)` under the shell-symmetry condition, derives `S=31/24` as a total-to-outer-shell ratio, and obtains `R=13/6` from the consistency of projective-incidence and affine-action normalizations. The fixed values remain the common inputs used throughout the subsequent paper series.
 
 ---
 
@@ -1107,6 +1699,12 @@ python -m code.paper7_cosmological_kinematics
 
 All public results can be reproduced without external fitting or optimization.
 
+The finite-geometric construction used by the foundational note can be checked independently with exact arithmetic:
+
+```bash
+python finite_geometric_verification.py
+```
+
 ### Run in Google Colab
 
 [![Open In Colab](https://colab.research.google.com/assets/colab-badge.svg)](https://colab.research.google.com/github/yasuotanakaresearch/zero-parameter-structure/blob/main/example.ipynb)
@@ -1172,7 +1770,9 @@ The paper-level outputs report:
 
 The numerical relations in this repository are presented as structural correspondences between fixed dimensionless ratios and observed reference quantities.
 
-They are not introduced as fitted empirical formulas. Each relation uses the same fixed structural inputs and is evaluated by direct comparison with the corresponding reference values.
+The finite-geometric construction of Version 3 is a candidate structural realization. Its mathematical consequences are separated from the additional physical interpretation of those structures. In particular, the finite vector spaces are not identified with physical spacetime, and the construction is not presented as a replacement for standard general relativity or quantum field theory.
+
+The sector relations are not introduced as fitted empirical formulas. Each relation uses the same fixed structural inputs and is evaluated by direct comparison with the corresponding reference values.
 
 For quantities with scheme or scale dependence, such as quark masses, the comparison should be interpreted as agreement with the relevant observed mass scale rather than tuning to a single central value.
 

@@ -108,7 +108,7 @@ def main() -> None:
 
     print("Common structural components")
     print("----------------------------")
-    print(f"3R^2 S        = {format_fraction(result.base_ratio):>7} = {fraction_to_decimal(result.base_ratio):.12f}")
+    print(f"3R^2 S        = {fraction_to_decimal(result.base_ratio):.12f}")
     print(f"8 R / S       = {propagation_factor(constants, 0):.12f}")
     print(f"8 pi R^2 / S  = {propagation_factor(constants, 1):.12f}")
     print()

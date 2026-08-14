@@ -51,9 +51,8 @@ def compute_psi_values(constants: StructuralConstants) -> PsiValues:
     The backbone values follow the common integer-core representation
     used in the paper.  With
 
-        6R = 13,  24S = 31,
+        core_13 = 6R,  core_31 = 24S,
         P_min = 2,  P_mid = 5,  P_max = 7,
-        Psi_s = 72,
 
     the backbones are
 
@@ -133,23 +132,6 @@ class TheoryResult:
 # Structural formulas
 # =========================================================
 
-def structural_term(
-    constants: StructuralConstants,
-    coefficient: Fraction,
-    r_power: int,
-    s_power: int,
-) -> Fraction:
-    """
-    Common structural term:
-
-        coefficient * R^r_power * S^s_power
-
-    This is the exact rational structural part, before any π-dependent
-    observational projection is applied.
-    """
-    return coefficient * (constants.R ** r_power) * (constants.S ** s_power)
-
-
 def correction_term(
     sign: int,
     psi_value: Fraction,
@@ -187,19 +169,19 @@ def alpha_inverse(constants: StructuralConstants, psi: PsiValues) -> Decimal:
     """
     Compute the structural expression for alpha^{-1}.
 
-    alpha^{-1} = 4π*(3R^2)/S * (1 + 1/psi_e)
+        alpha^{-1} = 4π B_alpha (1 + 1/Psi_e,eff)
 
-    Structural meaning:
-    - (3R^2)/S represents the secondary-binding sector after internal/external conversion.
-    - 4*pi represents the external observational projection.
-    - (1 + 1/psi_e) is the residual correction carried by the electron structure.
+    where the common branch value is inherited from StructuralConstants:
 
-    Thus alpha^{-1} is interpreted as the externally observed form of
-    the secondary-binding sector.
+        B_alpha = 3R^2 / S.
+
+    The 4π factor supplies the observational projection, while the
+    effective electron index carries the residual structural correction.
     """
+    psi_e_eff = psi.psi_e - psi.delta_e
+
     return projection_term(4) * fraction_to_decimal(
-        structural_term(constants, Fraction(3, 1), 2, -1) * 
-        correction_term(+1, psi.psi_e - psi.delta_e)
+        constants.B_alpha * correction_term(+1, psi_e_eff)
     )
 
 
@@ -207,19 +189,20 @@ def proton_mass_ratio(constants: StructuralConstants, psi: PsiValues) -> Decimal
     """
     Compute the proton-to-electron mass ratio.
 
-    m_p / m_e = alpha^{-1} * [(8R)/S * (1 - 1/psi_p)]
+        m_p / m_e = alpha^{-1} A_d (1 - 1/Psi_p,eff)
 
-    Structural meaning:
-    - alpha^{-1} supplies the outer observational normalization.
-    - 2*(4R)/S represents the primary-binding sector after conversion.
-    - (1 - 1/psi_p) is the proton residual correction.
+    where
 
-    The proton mass is therefore interpreted as a primary-binding mass
-    observed through the alpha-sector normalization.
+        A_d = 8R / S
+
+    is inherited as the common structural transfer factor from the
+    electromagnetic kernel to the composite nucleon scale.  It does not
+    count individual quark constituents.
     """
+    psi_p_eff = psi.psi_p + psi.delta_p
+
     return alpha_inverse(constants, psi) * fraction_to_decimal(
-        structural_term(constants, Fraction(8, 1), 1, -1) *
-        correction_term(-1, psi.psi_p + psi.delta_p)
+        constants.A_d * correction_term(-1, psi_p_eff)
     )
 
 
@@ -227,19 +210,16 @@ def neutron_mass_ratio(constants: StructuralConstants, psi: PsiValues) -> Decima
     """
     Compute the neutron-to-electron mass ratio.
 
-    m_n / m_e = alpha^{-1} * [(8R)/S * (1 - 1/psi_n)]
+        m_n / m_e = alpha^{-1} A_d (1 - 1/Psi_n,eff)
 
-    Structural meaning:
-    - alpha^{-1} again provides the outer observational normalization.
-    - 2*(4R)/S is the primary-binding base.
-    - 1/psi_n is the neutron-specific residual shift.
-
-    The neutron is interpreted as a neutral extension of the proton-side
-    primary-binding structure.
+    The same A_d branch used for the proton supplies the common composite
+    nucleon scale.  The proton-neutron separation is introduced only by
+    the corresponding effective structural index.
     """
+    psi_n_eff = psi.psi_n - psi.delta_n
+
     return alpha_inverse(constants, psi) * fraction_to_decimal(
-        structural_term(constants, Fraction(8, 1), 1, -1) *
-        correction_term(-1, psi.psi_n - psi.delta_n)
+        constants.A_d * correction_term(-1, psi_n_eff)
     )
 
 
@@ -247,38 +227,40 @@ def muon_mass_ratio(constants: StructuralConstants, psi: PsiValues) -> Decimal:
     """
     Compute the muon-to-electron mass ratio.
 
-    m_mu / m_e = (3/2) * 4π*(3R^2)/S * (1 + 1/psi_mu)
+        m_mu / m_e
+            = (3/2) 4π B_alpha (1 + 1/Psi_mu,eff)
 
-    Structural meaning:
-    - (3/2) gives the leading structural scaling for the muon sector.
-    - 4*pi*(3R^2)/S is the same secondary-binding observational channel
-      that appears in alpha^{-1}.
-    - (1 + R/psi_mu) is the muon residual correction.
-
-    The muon is interpreted as an intermediate secondary-binding structure.
+    The muon therefore inherits the same B_alpha branch that appears in
+    alpha^{-1}, with the fixed leading coefficient 3/2 and its own
+    effective structural index.
     """
+    psi_mu_eff = psi.psi_mu - psi.delta_mu
+
     return projection_term(4) * fraction_to_decimal(
-        structural_term(constants, Fraction(9, 2), 2, -1) *
-        correction_term(+1, psi.psi_mu - psi.delta_mu)
+        Fraction(3, 2)
+        * constants.B_alpha
+        * correction_term(+1, psi_mu_eff)
     )
 
 def tau_from_mu_ratio(constants: StructuralConstants, psi: PsiValues) -> Decimal:
     """
     Compute the tau-to-muon mass ratio.
 
-    m_tau / m_mu = (3/4) * [(8R)*S * (1 + 1/psi_tau)]
+        m_tau / m_mu
+            = (3/4) A_tau (1 + 1/Psi_tau,eff)
 
-    Structural meaning:
-    - (3/4) gives the leading structural scaling for the tau sector.
-    - (8R) represents the primary-binding pathway.
-    - S here connects the internal pathway to the observed heavy-lepton sector.
-    - (1 + 1/psi_tau) is the tau residual correction.
+    where the common branch value
 
-    The tau is interpreted as a fully extended heavy-lepton pathway.
+        A_tau = 8RS
+
+    is inherited from StructuralConstants.
     """
+    psi_tau_eff = psi.psi_tau + psi.delta_tau
+
     return fraction_to_decimal(
-        structural_term(constants, Fraction(8*3, 4), 1, 1) *
-        correction_term(+1, psi.psi_tau + psi.delta_tau)
+        Fraction(3, 4)
+        * constants.A_tau
+        * correction_term(+1, psi_tau_eff)
     )
 
 
@@ -295,6 +277,125 @@ def tau_from_e_ratio(constants: StructuralConstants, psi: PsiValues) -> Decimal:
     - the tau/muon heavy-path extension
     """
     return tau_from_mu_ratio(constants, psi) * muon_mass_ratio(constants, psi)
+
+
+# =========================================================
+# Appendix A: logarithmic sampling of alpha^{-1}(Q)
+# =========================================================
+
+@dataclass(frozen=True)
+class AlphaRunningCoefficients:
+    """Fixed rational coefficients used at the selected mass scales."""
+
+    muon: Fraction
+    tau: Fraction
+    bottom: Fraction
+    w_boson: Fraction
+    z_boson: Fraction
+    top: Fraction
+
+
+@dataclass(frozen=True)
+class AlphaRunningSample:
+    """One discrete logarithmic sample of the inverse electromagnetic coupling."""
+
+    label: str
+    mass_gev: Decimal
+    coefficient: Fraction
+    delta_alpha_inv: Decimal
+    alpha_inv: Decimal
+
+
+def k_n(n: int) -> Fraction:
+    """
+    Discrete structural coefficient used in Appendix A:
+
+        K_n = (1 + 1/n)^(-1) = n/(n + 1)
+
+    The index n is a structural label, not a particle-generation number.
+    """
+    if n <= 0:
+        raise ValueError("n must be a positive integer")
+    return Fraction(n, n + 1)
+
+
+def alpha_running_coefficients() -> AlphaRunningCoefficients:
+    """
+    Return the rational coefficients assigned to the characteristic scales:
+
+        K_alpha,mu  = K_3 / 4
+        K_alpha,tau = K_3 / 2
+        K_alpha,b   = K_2 + K_3 - 1
+        K_alpha,W   = K_2
+        K_alpha,Z   = K_3
+        K_alpha,t   = K_4
+    """
+    k2 = k_n(2)
+    k3 = k_n(3)
+    k4 = k_n(4)
+
+    return AlphaRunningCoefficients(
+        muon=k3 / 4,
+        tau=k3 / 2,
+        bottom=k2 + k3 - 1,
+        w_boson=k2,
+        z_boson=k3,
+        top=k4,
+    )
+
+
+def logarithmic_alpha_shift(
+    mass_gev: Decimal,
+    electron_mass_gev: Decimal,
+    coefficient: Fraction,
+) -> Decimal:
+    """
+    Compute the discrete logarithmic shift in the inverse coupling:
+
+        Delta_alpha,ln(m_i)
+            = K_alpha,i * ln(m_i / m_e)
+
+    Both masses must be expressed in the same unit.  GeV is used by the
+    reference implementation so that the logarithm is dimensionless.
+    """
+    mass_gev = Decimal(mass_gev)
+    electron_mass_gev = Decimal(electron_mass_gev)
+
+    if mass_gev <= 0 or electron_mass_gev <= 0:
+        raise ValueError("mass scales must be positive")
+
+    return fraction_to_decimal(coefficient) * (mass_gev / electron_mass_gev).ln()
+
+
+def compute_alpha_running_sample(
+    label: str,
+    mass_gev: Decimal,
+    electron_mass_gev: Decimal,
+    coefficient: Fraction,
+    alpha_inv_zero: Decimal,
+) -> AlphaRunningSample:
+    """
+    Evaluate one characteristic-scale sample:
+
+        alpha_ln^{-1}(m_i)
+            = alpha^{-1}(0) - Delta_alpha,ln(m_i)
+
+    This is a discrete structural sampling formula.  It is not implemented
+    as a continuous beta function and does not replace standard QED running.
+    """
+    delta = logarithmic_alpha_shift(
+        mass_gev=mass_gev,
+        electron_mass_gev=electron_mass_gev,
+        coefficient=coefficient,
+    )
+
+    return AlphaRunningSample(
+        label=label,
+        mass_gev=Decimal(mass_gev),
+        coefficient=coefficient,
+        delta_alpha_inv=delta,
+        alpha_inv=Decimal(alpha_inv_zero) - delta,
+    )
 
 
 # =========================================================

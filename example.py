@@ -38,12 +38,38 @@ AU_M = 149597870700
 # Common structural definitions
 # =========================================================
 
-P_MIN = 1 + 1
-P_MAX = 3 + 4
-P_MID = P_MAX - P_MIN
+# Unique finite-geometric realization
+Q = 2
+DIM_A = 2
+DIM_B = 3
+DIM_C = 5
 
-R = (Fraction(1) + Fraction(P_MIN, 24)) * 2
-S =  Fraction(1) + Fraction(P_MAX, 24)
+# F_2^3 decomposition: 1 | 3 | 4
+VACUUM        = 1
+INNER_NONZERO = Q**DIM_A - 1          # 3
+OUTER_LAYER   = Q**DIM_B - Q**DIM_A   # 4
+
+# F_2^5 state counts
+TOTAL_NONZERO = Q**DIM_C - 1          # 31
+OUTER_SHELL   = Q**DIM_C - Q**DIM_B   # 24
+
+# Legacy structural interface
+P_MIN = 1 + 1
+P_MID = VACUUM + OUTER_LAYER          # 1 + 4 = 5
+P_MAX = INNER_NONZERO + OUTER_LAYER   # 3 + 4 = 7
+
+# Fixed structural ratios
+R = Fraction(2, 1) + Fraction(1, Q * (Q + 1))
+S = Fraction(TOTAL_NONZERO, OUTER_SHELL)
+
+# 3R^2 structural family
+B_alpha = 3 * R**2 / S
+B_q     = 3 * R**2 * S
+
+# 8R structural family
+A_d     = 8 * R / S
+A_tau   = 8 * R * S
+A_u     = math.pi * R * A_d
 
 
 # =========================================================
@@ -83,28 +109,19 @@ core_31 = S * 24
 psi_e0   = Fraction(3, 2) * (core_13    * core_31**2 - P_MAX**2) / 3
 psi_p0   = Fraction(3, 2) * (core_13**2 * core_31    + P_MAX**2) / 12
 psi_n0   = Fraction(3, 2) * (core_13    * core_31    + P_MIN**2) * 12
-psi_mu0  = Fraction(psi_p0, P_MIN**2)
-psi_tau0 = psi_p0
 
 # Residual structural fluctuations delta_psi.
 delta_e   = Fraction(1, 2) + Fraction(1, P_MID**2)
 delta_p   = Fraction(6**2) * Fraction(1, psi_e0 + 24 - Fraction(1, 2))
 delta_n   = Fraction(2, 3) * Fraction(12*P_MAX - 1, 12*P_MAX + 3)
-delta_mu  = Fraction(1, 2) - Fraction(1, P_MAX**2) + Fraction(1, (psi_mu0 * P_MAX**2))
-delta_tau = Fraction(1, 1)
 
 psi_e     = psi_e0   - delta_e
 psi_p     = psi_p0   + delta_p
 psi_n     = psi_n0   - delta_n
-psi_mu    = psi_mu0  - delta_mu
-psi_tau   = psi_tau0 + delta_tau
 
-alpha_inv =         4*math.pi * (3*R**2 / S) * (1 + 1/psi_e)
-mmu_me    = (3/2) * 4*math.pi * (3*R**2 / S) * (1 + 1/psi_mu)
-mtau_mmu  = (3/4)             * (8*R    * S) * (1 + 1/psi_tau)
-mp_me     =         alpha_inv * (8*R    / S) * (1 - 1/psi_p)
-mn_me     =         alpha_inv * (8*R    / S) * (1 - 1/psi_n)
-mtau_me   = mtau_mmu * mmu_me
+alpha_inv = 4*math.pi * B_alpha * (1 + 1/psi_e)
+mp_me     = alpha_inv * A_d     * (1 - 1/psi_p)
+mn_me     = alpha_inv * A_d     * (1 - 1/psi_n)
 
 alpha = alpha_inv**-1
 
@@ -121,14 +138,15 @@ me_gev      = me_ev * 10**-9  # GeV
 # Gravity
 # =========================================================
 
-psi_g      = (12 * (3 * R**2) * (4 * R) + 2 * R) / 4
+psi_g      = 8 * R * ((3 * R) * (3 * S) - P_MIN**2)
 psi_g0     = R * S**2 * (12 * 24)
 psi_g_star = 4 * psi_g - 3 * (1 + 1 / psi_g0)
 
-sqrt_G   = (alpha * S) / (math.pi * psi_g)
-G        = sqrt_G**2
-alpha_Gp = alpha**24 * mp_me**4 / (1 + 1 / psi_g_star)
-alpha_Ge = alpha**24 * mp_me**2 / (1 + 1 / psi_g_star)
+G_inv_sqrt = (1 / alpha) * A_d * math.pi * ((3 * R) * (3 * S) - P_MIN**2)
+sqrt_G     = 1/ G_inv_sqrt
+G          = sqrt_G**2
+alpha_Gp   = alpha**24 * mp_me**4 / (1 + 1 / psi_g_star)
+alpha_Ge   = alpha**24 * mp_me**2 / (1 + 1 / psi_g_star)
 
 g_corr = (1 + 1 / psi_g_star)**(-1/2)
 M_Pl   = math.sqrt(hbar * c / G)
@@ -141,17 +159,13 @@ M_E    = M_Pl * alpha**12 * mp_me    * g_corr
 # =========================================================
 
 K_q = {
-    "u": (    1 / (2 * R)),
-    "d": (    1 /  2),
-    "c": (1 + 1 /  2),
-    "s": (1 - 1 /  4),
-    "t": (2 + 1 / (2 * R)),
-    "b": (2 + 1 /  2),
+    "u": Fraction(    1 / (2 * R)),
+    "d": Fraction(    1 /  2),
+    "c": Fraction(1 + 1 /  2),
+    "s": Fraction(1 - 1 /  4),
+    "t": Fraction(2 + 1 / (2 * R)),
+    "b": Fraction(2 + 1 /  2),
 }
-
-B_q = (3 * R**2) * S
-A_d = (8 * R) / S
-A_u = math.pi * R * A_d
 
 m_u = me_mev * K_q["u"] * B_q
 m_d = me_mev * K_q["d"] * B_q
@@ -159,6 +173,30 @@ m_c = me_mev * K_q["c"] * B_q * A_u
 m_s = me_mev * K_q["s"] * B_q * A_d
 m_t = me_gev * K_q["t"] * B_q * A_u**2
 m_b = me_gev * K_q["b"] * B_q * A_d**2
+
+
+# Cross-sector coefficient inheritance
+K_c = K_q["c"]
+K_s = K_q["s"]
+
+# =========================================================
+# Charged-lepton mass hierarchy
+# =========================================================
+
+# Structural backbone values Psi_0.
+psi_mu0  = Fraction(psi_p0, P_MIN**2)
+psi_tau0 = psi_p0
+
+# Residual structural fluctuations delta_psi.
+delta_mu  = Fraction(1, 2) - Fraction(1, P_MAX**2) + Fraction(1, (psi_mu0 * P_MAX**2))
+delta_tau = Fraction(1, 1)
+
+psi_mu   = psi_mu0  - delta_mu
+psi_tau  = psi_tau0 + delta_tau
+
+mmu_me   = K_q["c"] * 4*math.pi * B_alpha * (1 + 1/psi_mu)
+mtau_mmu = K_q["s"]             * A_tau   * (1 + 1/psi_tau)
+mtau_me  = mtau_mmu * mmu_me
 
 
 # =========================================================
@@ -201,7 +239,7 @@ Psi_H = 12 * (4 * (3 * R**2) + 3)
 Psi_v = 3**2 * Psi_H
 
 # Higgs and vacuum scales.
-mH_over_me = (1 / 2.0) * B_H + Psi_H
+mH_over_me = Fraction(1, 2) * B_H + Psi_H
 v_over_me  = B_H - Psi_v
 mH_GeV     = mH_over_me * me_gev
 v_GeV      = v_over_me  * me_gev
@@ -220,20 +258,18 @@ alpha_s_mZ  = 1 - mW_GeV / mZ_GeV
 # Cosmological and Local Kinematic Scales
 # =========================================================
 
-chi_st   = 3 * R**2 / S
-Omega_b  = 1 / (3 * R**2 + 3 * R)
-omega_st = 4 * math.pi * chi_st / psi_e
+omega_st = 4 * math.pi * B_alpha / psi_e
 H_st     = 100 * (omega_st / Omega_b)**0.5  # km/s/Mpc
 
 Mpc_m    = (AU_M * 60**2 / (math.pi / 180.0)) * 10**6
 H_st_si  = H_st * 10**3 / Mpc_m
 
 H_ladder_st = (R / 2) * H_st
-T_alpha_st  = chi_st * H_st_si**-1
+T_alpha_st  = B_alpha * H_st_si**-1
 a_st        = 2 * c * T_alpha_st**-1
 
-c_closure = Fraction(1, 2) * a_st * chi_st     * H_st_si**-1
-v_LS_st   = Fraction(1, 8) * a_st * chi_st**-1 * H_st_si**-1
+c_closure = Fraction(1, 2) * a_st * B_alpha     * H_st_si**-1
+v_LS_st   = Fraction(1, 8) * a_st * B_alpha**-1 * H_st_si**-1
 
 
 # =========================================================
@@ -243,11 +279,16 @@ v_LS_st   = Fraction(1, 8) * a_st * chi_st**-1 * H_st_si**-1
 def main() -> None:
     print("Zero Parameter Structure - Minimal End-to-End Example")
     print("=====================================================")
-    print(f"P_MIN = {P_MIN}")
-    print(f"P_MAX = {P_MAX}")
-    print(f"P_MID = {P_MID}")
-    print(f"R     = {R} = {float(R):.12f}")
-    print(f"S     = {S} = {float(S):.12f}")
+    print(f"P_MIN   = {P_MIN}")
+    print(f"P_MAX   = {P_MAX}")
+    print(f"P_MID   = {P_MID}")
+    print(f"R       = {float(R):15.12f} = {R}")
+    print(f"S       = {float(S):15.12f} = {S}")
+    print(f"B_alpha = {float(B_alpha):15.12f} = {B_alpha}")
+    print(f"B_q     = {float(B_q):15.12f} = {B_q}")
+    print(f"A_d     = {float(A_d):15.12f} = {A_d}")
+    print(f"A_tau   = {float(A_tau):15.12f} = {A_tau}")
+    print(f"A_u     = {A_u:15.12f}")
     print()
 
     print("Cosmology")
@@ -264,15 +305,10 @@ def main() -> None:
         ("Psi_e", psi_e, "", ".12f"),
         ("Psi_p", psi_p, "", ".12f"),
         ("Psi_n", psi_n, "", ".12f"),
-        ("Psi_mu", psi_mu, "", ".12f"),
-        ("Psi_tau", psi_tau, "", ".12f"),
         ("alpha^-1", alpha_inv, "", ".12f"),
         ("alpha", alpha, "", ".12e"),
         ("m_p / m_e", mp_me, "", ".12f"),
         ("m_n / m_e", mn_me, "", ".12f"),
-        ("m_mu / m_e", mmu_me, "", ".12f"),
-        ("m_tau / m_mu", mtau_mmu, "", ".12f"),
-        ("m_tau / m_e", mtau_me, "", ".12f"),
         ("Psi_me*", psi_me_star, "", ".12f"),
         ("Psi_me", psi_me, "", ".12f"),
         ("m_e c^2", me_ev, "eV", ".9f"),
@@ -299,15 +335,25 @@ def main() -> None:
     print("Quark masses")
     print("------------")
     print_rows([
-        ("B_q", B_q, "", ".12f"),
-        ("A_u", A_u, "", ".12f"),
-        ("A_d", A_d, "", ".12f"),
         ("m_u", m_u, "MeV", ".12f"),
         ("m_d", m_d, "MeV", ".12f"),
         ("m_c", m_c, "MeV", ".12f"),
         ("m_s", m_s, "MeV", ".12f"),
         ("m_t", m_t, "GeV", ".12f"),
         ("m_b", m_b, "GeV", ".12f"),
+    ])
+    print()
+
+    print("Charged-lepton mass hierarchy")
+    print("--------------------------------")
+    print(f"K_c                = {float(K_c):20.12f} = {K_c}")
+    print(f"A_d                = {float(K_s):20.12f} = {K_s}")
+    print_rows([
+        ("Psi_mu", psi_mu, "", ".12f"),
+        ("Psi_tau", psi_tau, "", ".12f"),
+        ("m_mu / m_e", mmu_me, "", ".12f"),
+        ("m_tau / m_mu", mtau_mmu, "", ".12f"),
+        ("m_tau / m_e", mtau_me, "", ".12f"),
     ])
     print()
 
@@ -349,7 +395,6 @@ def main() -> None:
     print("Cosmological and Local Kinematic Scales")
     print("----------------------------------------------")
     print_rows([
-        ("chi_st", chi_st, "", ".12f"),
         ("omega_st", omega_st, "", ".12f"),
         ("H_st", H_st, "km/s/Mpc", ".12f"),
         ("H_ladder_st", H_ladder_st, "km/s/Mpc", ".12f"),

@@ -41,7 +41,7 @@ def fraction_to_decimal(value: Fraction) -> Decimal:
 class CosmologicalLocalKinematicValues:
     psi_e_eff: Decimal
 
-    chi_st: Decimal
+    B_alpha: Decimal
     omega_b_st: Decimal
     omega_st: Decimal
 
@@ -63,31 +63,30 @@ def compute_cosmological_kinematic_values(
 ) -> CosmologicalLocalKinematicValues:
     r"""Compute the unified Paper 7 structural chain.
 
-        chi_st = 3 R^2 / S
+        B_alpha     = 3 R^2 / S
 
-        Omega_b,st = 1 / (3 R^2 + 3 R)
-        omega_st   = 4 pi chi_st / Psi_e,eff
-        H_st       = 100 sqrt(omega_st / Omega_b,st)
+        Omega_b,st  = 1 / (3 R^2 + 3 R)
+        omega_st    = 4 pi B_alpha / Psi_e,eff
+        H_st        = 100 sqrt(omega_st / Omega_b,st)
 
         H_ladder,st = (R/2) H_st
-        T_alpha,st  = chi_st H_st^(-1)
+        T_alpha,st  = B_alpha H_st^(-1)
         a_st        = 2 c T_alpha,st^(-1)
 
-        c_closure = (1/2) a_st chi_st H_st^(-1)
-        v_LS,st   = (1/8) a_st chi_st^(-1) H_st^(-1)
+        c_closure   = (1/2) a_st B_alpha H_st^(-1)
+        v_LS,st     = (1/8) a_st B_alpha^(-1) H_st^(-1)
 
     H_st is converted to SI before it enters the time, acceleration,
     closure, and velocity relations.
     """
-    R = fraction_to_decimal(constants.R)
-    S = fraction_to_decimal(constants.S)
+    R            = fraction_to_decimal(constants.R)
+    B_alpha      = fraction_to_decimal(constants.B_alpha)
 
     psi_electron = compute_psi_values(constants)
     psi_e_eff    = fraction_to_decimal(psi_electron.psi_e - psi_electron.delta_e)
 
-    chi_st       = 3 * R**2 / S
     omega_b_st   = 1 / (3 * R**2 + 3 * R)
-    omega_st     = 4 * PI * chi_st / psi_e_eff
+    omega_st     = 4 * PI * B_alpha / psi_e_eff
     H_st         = Decimal(100) * (omega_st / omega_b_st).sqrt()
 
     # 1 pc = (648000 / pi) au; 1 Mpc = 10^6 pc.
@@ -95,15 +94,15 @@ def compute_cosmological_kinematic_values(
     H_st_si      = H_st * Decimal(1000) / megaparsec_m
 
     H_ladder_st  = (R / 2) * H_st
-    T_alpha_st   = chi_st / H_st_si
+    T_alpha_st   = B_alpha / H_st_si
     a_st         = 2 * c / T_alpha_st
 
-    c_closure_m_per_s = (Decimal(1) / 2) * a_st * chi_st / H_st_si
-    v_LS_st_m_per_s   = (Decimal(1) / 8) * a_st / chi_st / H_st_si
+    c_closure_m_per_s = (Decimal(1) / 2) * a_st * B_alpha / H_st_si
+    v_LS_st_m_per_s   = (Decimal(1) / 8) * a_st / B_alpha / H_st_si
 
     return CosmologicalLocalKinematicValues(
         psi_e_eff=psi_e_eff,
-        chi_st=chi_st,
+        B_alpha=B_alpha,
         omega_b_st=omega_b_st,
         omega_st=omega_st,
         megaparsec_m=megaparsec_m,

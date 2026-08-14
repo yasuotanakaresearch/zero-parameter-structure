@@ -7,7 +7,7 @@ from typing import Optional
 # =========================================================
 
 DATASET_NAME = "Particle Data Group and paper-level reference values"
-DATASET_VERSION = "PDG 2025 / Paper 6 reference set"
+DATASET_VERSION = "PDG 2025 / Paper 2 and Paper 6 reference set"
 
 
 @dataclass(frozen=True)
@@ -146,6 +146,21 @@ PDG_OBSERVED = {
         unit="GeV",
         note="PDG 2025; pole mass from cross-section measurements",
     ),
+}
+
+
+# Appendix-level reference values for the electromagnetic coupling in Paper 2.
+# The m_mu, m_tau, and m_Z entries are anchored to representative PDG
+# MSbar values; the remaining entries are representative RGE continuations.
+# They are therefore kept separate from PDG_OBSERVED and should be described
+# in tables as PDG/RGE reference values, not as six independent PDG averages.
+PAPER2_ALPHA_INV_RGE_REFERENCE = {
+    "m_mu": 135.901,   # PDG 2025, MSbar
+    "m_tau": 133.450,  # PDG 2025, MSbar, n_f = 4
+    "m_b": 132.02,     # RGE-generated reference
+    "m_W": 128.06,     # RGE-generated reference
+    "m_Z": 127.930,    # PDG 2025, MSbar, n_f = 5
+    "m_t": 127.05,     # RGE-generated reference; threshold convention required
 }
 
 

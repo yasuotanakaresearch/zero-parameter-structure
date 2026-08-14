@@ -105,7 +105,7 @@ def main() -> None:
     print()
 
     main_rows = (
-        ("chi_st", values.chi_st, "", ".12f"),
+        ("B_alpha", values.B_alpha, "", ".12f"),
         ("Omega_b,st", values.omega_b_st, "", ".12f"),
         ("omega_st", values.omega_st, "", ".12f"),
         ("H_st", values.H_st, "km s^-1 Mpc^-1", ".12f"),
