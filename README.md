@@ -1521,7 +1521,7 @@ zero-parameter-structure/
 ├── core/
 ├── code/
 ├── observed_data/
-├── assets/
+├── tools/
 ├── example.py
 ├── example.ipynb
 ├── finite_geometric_verification.py
@@ -1541,6 +1541,12 @@ Paper-level executable scripts.
 ### `observed_data/`
 
 Observed reference values used for numerical comparison.
+
+### `tools/`
+
+Visualization and utility tools built on the structural calculations in `core/`.
+
+See [tools/README.md](tools/README.md) for details.
 
 ### `example.py`
 
