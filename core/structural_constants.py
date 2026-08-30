@@ -7,18 +7,37 @@ Licensed under the MIT License.
 Common fixed structural constants used in the ``Structural Origin of''
 paper series.
 
-V3 finite-geometric realization
--------------------------------
-The fixed ratios R and S are generated from the unique finite-geometric
-solution
+Version 1.0 minimal-axiom foundation
+------------------------------------
+The foundational construction selects
 
-    (q, a, b, c) = (2, 2, 3, 5),
+    q = 2,
+    q_sharp = q + 1 = 3,
 
-with the nested binary dimensions
+and generates
 
-    F_2^2 < F_2^3 < F_2^5.
+    X(n,s) = q_sharp * q**n + s,
+    Y(n)   = q**(n+1) - 1,
 
-The legacy public interface
+with the unit-normalized product map
+
+    P(n) = X(n)Y(n) / q_sharp.
+
+The distinguished values are
+
+    P(1), P(q), P(q**2) = 6, 28, 496.
+
+The common structural ratios are defined directly from the generated
+X/Y hierarchy,
+
+    R = X(q,+1) / X(1)         = 13/6,
+    S = Y(q**2) / X(q_sharp)   = 31/24,
+
+so that
+
+    q/S = X(q**2) / Y(q**2) = 48/31.
+
+The existing sector-level interface
 
     P_MIN, P_MID, P_MAX,
     StructuralConstants,
@@ -28,27 +47,9 @@ and the derived branch properties
 
     B_alpha, B_q, A_d, A_tau
 
-is retained unchanged for compatibility with the existing sector-level
-scripts.
-
-The path labels are now connected to the finite-geometric decomposition
-
-    F_2^3 = {0}
-            disjoint union (F_2^2 \\ {0})
-            disjoint union (F_2^3 \\ F_2^2),
-
-whose cardinalities are
-
-    1 | 3 | 4.
-
-Hence
-
-    P_MIN = 1 + 1 = 2,
-    P_MID = 1 + 4 = 5,
-    P_MAX = 3 + 4 = 7.
-
-The previous identity P_MID = P_MAX - P_MIN remains true, but is no
-longer used as the defining relation.
+is retained unchanged.  The legacy labels P_MIN/P_MID/P_MAX are
+downstream compatibility values and are distinct from the foundational
+product-map values P1/P2/P3.
 """
 
 from dataclasses import dataclass
@@ -56,61 +57,68 @@ from fractions import Fraction
 
 
 # =========================================================
-# Finite-geometric realization
+# Minimal axiomatic structure
 # =========================================================
 
-# Unique finite-field / dimension solution selected by the
-# shell-symmetry condition in the V3 paper.
-Q = 2
+q = 2
+q_sharp = q + 1
+
+
+def X(n: int, s: int = 0) -> int:
+    """Generated X-sequence: X(n,s) = q_sharp * q^n + s."""
+    return q_sharp * q**n + s
+
+
+def Y(n: int) -> int:
+    """Generated Y-sequence: Y(n) = q^(n+1) - 1."""
+    return q**(n + 1) - 1
+
+
+def P(n: int) -> int:
+    """Unit-normalized product map: P(n) = X(n)Y(n)/q_sharp."""
+    numerator = X(n) * Y(n)
+    assert numerator % q_sharp == 0
+    return numerator // q_sharp
+
+
+P1 = P(1)
+P2 = P(q)
+P3 = P(q**2)
+
+assert (q, q_sharp) == (2, 3)
+assert (P1, P2, P3) == (6, 28, 496)
+
+
+# =========================================================
+# Legacy downstream interface
+# =========================================================
+
+# Retained unchanged for compatibility with existing sector-level scripts.
+# These are not the same objects as P1, P2, P3.
+P_MIN = 2
+P_MID = 5
+P_MAX = 7
+
+assert (P_MIN, P_MID, P_MAX) == (2, 5, 7)
+
+
+# =========================================================
+# Optional finite-geometric consistency metadata
+# =========================================================
+
+# Retained for compatibility with earlier verification code.  These
+# quantities are not used to define q, X, Y, P, R, or S.
+Q = q
 DIM_A = 2
 DIM_B = 3
 DIM_C = 5
 
-# F_2^3 decomposition:
-#
-#     {0} | (F_2^2 \ {0}) | (F_2^3 \ F_2^2)
-#      1  |        3       |        4
-#
 VACUUM              = 1
-INNER_NONZERO       = Q**DIM_A - 1         # 3
-OUTER_LAYER         = Q**DIM_B - Q**DIM_A  # 4
-
-# F_2^5 state counts.
-INNER_TOTAL_NONZERO = Q**DIM_B - 1         # 7
-TOTAL_NONZERO       = Q**DIM_C - 1         # 31
-OUTER_SHELL         = Q**DIM_C - Q**DIM_B  # 24
-
-
-# =========================================================
-# Legacy public path interface
-# =========================================================
-
-# Retained names and values for compatibility with existing scripts.
-#
-# P_MIN:
-#   binary two-class structure, retained in the legacy form 1 + 1.
-#
-# P_MID:
-#   vacuum plus the four-state outer affine layer.
-#
-# P_MAX:
-#   all seven nonzero states of F_2^3 = 3 + 4.
-#
-P_MIN = 1 + 1
-P_MID = VACUUM + OUTER_LAYER
-P_MAX = INNER_NONZERO + OUTER_LAYER
-
-# Structural consistency checks.
-assert P_MIN == 2
-assert P_MID == 5
-assert P_MAX == 7
-
-assert P_MAX == INNER_TOTAL_NONZERO
-assert P_MID == 1 + OUTER_LAYER
-
-# The old relation remains numerically valid, but is now a consequence
-# rather than the definition of P_MID.
-assert P_MID == P_MAX - P_MIN
+INNER_NONZERO       = Q**DIM_A - 1
+OUTER_LAYER         = Q**DIM_B - Q**DIM_A
+INNER_TOTAL_NONZERO = Q**DIM_B - 1
+TOTAL_NONZERO       = Q**DIM_C - 1
+OUTER_SHELL         = Q**DIM_C - Q**DIM_B
 
 
 # =========================================================
@@ -122,24 +130,24 @@ class StructuralConstants:
     """
     Fixed structural branches of the framework.
 
-    V3 finite-geometric forms
-    -------------------------
+    Version 1.0 X/Y forms
+    ---------------------
 
-    S is the total-to-outer-shell normalization,
+    R and S are generated directly from the X/Y hierarchy,
 
-        S = (q^c - 1) / (q^c - q^b)
+        R = X(q,+1) / X(1)
+          = 13 / 6,
+
+        S = Y(q**2) / X(q_sharp)
           = 31 / 24.
 
-    R is the common value selected by the compatible projective-incidence
-    and affine-action normalizations at q = 2,
+    The terminal ratio is
 
-        R = 2 + 1 / [q(q + 1)]
-          = 13 / 6.
+        q / S = X(q**2) / Y(q**2)
+              = 48 / 31.
 
-    These are exactly equivalent to the legacy numerical forms
-
-        R = 2 * (1 + P_MIN / 24),
-        S = 1 + P_MAX / 24.
+    The product-map formulas are exact equivalent closure
+    representations rather than the primary definitions.
 
     Common branch structure
     -----------------------
@@ -158,9 +166,8 @@ class StructuralConstants:
     independent structural inputs.
     """
 
-    # V3 definitions.
-    R: Fraction = Fraction(2, 1) + Fraction(1, Q * (Q + 1))
-    S: Fraction = Fraction(TOTAL_NONZERO, OUTER_SHELL)
+    R: Fraction = Fraction(X(q, +1), X(1))
+    S: Fraction = Fraction(Y(q**2), X(q_sharp))
 
     @property
     def B_alpha(self) -> Fraction:
@@ -184,12 +191,21 @@ class StructuralConstants:
 
 
 # =========================================================
-# Backward-compatibility checks
+# Exact closure and backward-compatibility checks
 # =========================================================
 
-# Legacy R/S expressions are retained only as exact equivalence checks.
-_LEGACY_R = 2 * (Fraction(1) + Fraction(P_MIN, OUTER_SHELL))
-_LEGACY_S = Fraction(1) + Fraction(P_MAX, OUTER_SHELL)
+# Primary X/Y relation.
+assert Fraction(q, 1) / StructuralConstants.S == Fraction(X(q**2), Y(q**2))
+assert X(q**2) == q * X(q_sharp)
+
+# Equivalent product-map closure.
+assert StructuralConstants.R == Fraction(q, 1) + Fraction(1, P1)
+assert StructuralConstants.S == Fraction(P3, P1 * q**P1)
+assert StructuralConstants.R - StructuralConstants.S == Fraction(P2, q**(P1 - 1))
+
+# Legacy downstream R/S expressions remain exact numerical identities.
+_LEGACY_R = 2 * (Fraction(1) + Fraction(P_MIN, 24))
+_LEGACY_S = Fraction(1) + Fraction(P_MAX, 24)
 
 assert StructuralConstants.R == _LEGACY_R
 assert StructuralConstants.S == _LEGACY_S
@@ -202,26 +218,21 @@ STRUCTURAL_CONSTANTS = StructuralConstants()
 if __name__ == "__main__":
     c = STRUCTURAL_CONSTANTS
 
-    print("Finite-geometric realization")
-    print("----------------------------")
-    print(f"q = {Q}")
-    print(f"(a, b, c) = ({DIM_A}, {DIM_B}, {DIM_C})")
-    print(f"1 | 3 | 4 = {VACUUM} | {INNER_NONZERO} | {OUTER_LAYER}")
-    print(f"outer shell = {OUTER_SHELL}")
-    print(f"total nonzero = {TOTAL_NONZERO}")
+    print("Minimal axiomatic structure")
+    print("---------------------------")
+    print(f"q = {q}")
+    print(f"q_sharp = {q_sharp}")
+    print(f"P1, P2, P3 = {P1}, {P2}, {P3}")
+    print(f"R = {c.R} = {float(c.R):.12f}")
+    print(f"S = {c.S} = {float(c.S):.12f}")
+    print(f"q/S = {Fraction(q, 1) / c.S} = {float(Fraction(q, 1) / c.S):.12f}")
     print()
 
-    print("Legacy public interface")
-    print("-----------------------")
+    print("Legacy downstream interface")
+    print("---------------------------")
     print(f"P_MIN = {P_MIN}")
     print(f"P_MID = {P_MID}")
     print(f"P_MAX = {P_MAX}")
-    print()
-
-    print("Structural constants")
-    print("--------------------")
-    print(f"R = {c.R} = {float(c.R):.12f}")
-    print(f"S = {c.S} = {float(c.S):.12f}")
     print()
 
     print("Derived common branches")

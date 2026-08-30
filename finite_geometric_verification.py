@@ -1,14 +1,17 @@
 #!/usr/bin/env python3
-"""Exact checks for the finite-geometric realization used in the paper.
+"""Exact checks for the finite-geometric and perfect-number realization.
 
-The analytic proofs are given in the manuscript.  This script is a
-reproducibility check for finite searches and structural cardinalities.
+The analytic proofs are given in the manuscript. This script provides
+reproducibility checks for the finite search, the selected perfect-number
+hierarchy, inclusion-exclusion cardinalities, finite flags, orbit-stabilizer
+counts, and the derived X/Y structural-level coordinate table.
+
 All decisive calculations use integers or fractions.
 """
 
 from fractions import Fraction
 from itertools import combinations, product
-from math import prod
+from math import comb, prod
 
 
 def gl_order(a: int, q: int) -> int:
@@ -23,23 +26,8 @@ def shell(q: int, b: int, c: int) -> int:
     return q**c - q**b
 
 
-def s_ratio(q: int, b: int, c: int) -> Fraction:
-    return Fraction(q**c - 1, q**c - q**b)
-
-
-def r_inc(q: int) -> Fraction:
-    n = q*q + q + 1
-    return Fraction(n + (n - 1), n - 1)
-
-
-def r_act(q: int) -> Fraction:
-    orbit = q*q * (q*q - 1)
-    stabilizer = q * (q - 1)
-    return Fraction(stabilizer, 1) * (1 + Fraction(1, orbit))
-
-
 # ---------------------------------------------------------------------
-# 1. Finite sanity check of the uniqueness theorem
+# 1. Finite sanity check of the shell-symmetry uniqueness theorem
 # ---------------------------------------------------------------------
 solutions = []
 for q in range(2, 33):
@@ -52,29 +40,94 @@ for q in range(2, 33):
 print("shell=symmetry solutions:", solutions)
 assert solutions == [(2, 2, 3, 5, 24)]
 
-
-# ---------------------------------------------------------------------
-# 2. R and S uniqueness checks
-# ---------------------------------------------------------------------
-r_matches = [(q, r_inc(q)) for q in range(2, 101) if r_inc(q) == r_act(q)]
-print("R-family intersections:", r_matches)
-assert r_matches == [(2, Fraction(13, 6))]
-
-s_matches = []
-for q in range(2, 129):
-    for b in range(1, 20):
-        for c in range(b + 1, 30):
-            if s_ratio(q, b, c) == Fraction(31, 24):
-                s_matches.append((q, b, c))
-print("S=31/24 solutions:", s_matches)
-assert s_matches == [(2, 3, 5)]
+q, a, b, c = 2, 2, 3, 5
 
 
 # ---------------------------------------------------------------------
-# 3. Flag cardinalities in F_2^5
+# 2. Mersenne cores and the first three even perfect numbers
+# ---------------------------------------------------------------------
+def mersenne(p: int) -> int:
+    return 2**p - 1
+
+
+def even_perfect(p: int) -> int:
+    return 2 ** (p - 1) * mersenne(p)
+
+
+selected_exponents = (a, b, c)
+selected_perfect = [(p, even_perfect(p)) for p in selected_exponents]
+print("selected perfect numbers:", selected_perfect)
+assert selected_perfect == [(2, 6), (3, 28), (5, 496)]
+
+P1, P2, P3 = (value for _, value in selected_perfect)
+M2, M3, M5 = mersenne(2), mersenne(3), mersenne(5)
+
+assert (M2, M3, M5) == (3, 7, 31)
+assert P1 == comb(2**2, 2)
+assert P2 == comb(2**3, 2)
+assert P3 == comb(2**5, 2)
+assert M5 == M2 + 2**2 * M3
+assert M3 == P1 + 1
+assert P2 == q**2 * (P1 + 1)
+
+
+# ---------------------------------------------------------------------
+# 3. Unified support counts and inclusion-exclusion
+# ---------------------------------------------------------------------
+# A ~= F_2^2 and B ~= F_2^3. In A x B define
+# calX = (A \\ {0}) x B and calY = A x (B \\ {0}).
+# Only cardinalities are required for the paper's normalization.
+calX_count = (q**a - 1) * q**b
+calY_count = q**a * (q**b - 1)
+union_count = q ** (a + b) - 1
+intersection_count = (q**a - 1) * (q**b - 1)
+
+print(
+    f"support counts: calX={calX_count}, calY={calY_count}, "
+    f"union={union_count}, intersection={intersection_count}"
+)
+
+assert a + b == c
+assert c - b == a
+assert calX_count == shell(q, b, c) == 24
+assert calY_count == P2 == 28
+assert union_count == M5 == 31
+assert intersection_count == M2 * M3 == 21
+assert calX_count + calY_count == union_count + intersection_count
+
+R = Fraction(calX_count + calY_count, calX_count)
+S = Fraction(union_count, calX_count)
+R_minus_S = Fraction(intersection_count, calX_count)
+
+assert R == S + R_minus_S
+assert R == Fraction(13, 6)
+assert S == Fraction(31, 24)
+assert R_minus_S == Fraction(7, 8)
+
+# Equivalent perfect-number closure forms used in the manuscript.
+assert R == Fraction(q, 1) + Fraction(1, P1)
+assert R_minus_S == Fraction(P2, q**5)
+assert S == Fraction(P3, P1 * q**6)
+
+print(f"perfect-number ratios: R={R}, R-S={R_minus_S}, S={S}")
+
+# Structural decomposition: the apparently different perfect-number
+# denominators reduce to the same q^3 normalization.
+assert R_minus_S == Fraction(M3, q**3)
+assert S == Fraction(M5, M2 * q**3)
+assert R == Fraction(M2 * M3 + M5, M2 * q**3)
+
+print(
+    "common q^3 normalization: "
+    f"R-S={Fraction(M3, q**3)}, S={Fraction(M5, M2 * q**3)}"
+)
+
+
+# ---------------------------------------------------------------------
+# 4. Flag cardinalities in F_2^5
 # ---------------------------------------------------------------------
 def add(x, y):
-    return tuple(a ^ b for a, b in zip(x, y))
+    return tuple(u ^ v for u, v in zip(x, y))
 
 
 def span(vectors, n):
@@ -116,20 +169,20 @@ assert profiles == {(3, 4, 24)}
 
 
 # ---------------------------------------------------------------------
-# 4. GL(3,2), line stabilizer, and the 12 x 2 = 24 action
+# 5. GL(3,2), line stabilizer, and the 12 x 2 = 24 action
 # ---------------------------------------------------------------------
 def rank_mod2(matrix):
-    a = [list(row) for row in matrix]
+    mat = [list(row) for row in matrix]
     r = 0
-    m, n = len(a), len(a[0])
-    for c in range(n):
-        pivot = next((i for i in range(r, m) if a[i][c]), None)
+    m, n = len(mat), len(mat[0])
+    for col in range(n):
+        pivot = next((i for i in range(r, m) if mat[i][col]), None)
         if pivot is None:
             continue
-        a[r], a[pivot] = a[pivot], a[r]
+        mat[r], mat[pivot] = mat[pivot], mat[r]
         for i in range(m):
-            if i != r and a[i][c]:
-                a[i] = [x ^ y for x, y in zip(a[i], a[r])]
+            if i != r and mat[i][col]:
+                mat[i] = [x ^ y for x, y in zip(mat[i], mat[r])]
         r += 1
     return r
 
@@ -183,4 +236,65 @@ assert len(orbit) == 12
 assert len(stabilizer) == 2
 assert len(line_stab) == len(orbit) * len(stabilizer)
 
+
+# ---------------------------------------------------------------------
+# 6. Finite-geometric X/Y structural-level mapping
+# ---------------------------------------------------------------------
+def X_ZERO(n: int) -> int:
+    if n < 1:
+        raise ValueError("X structural level n must be >= 1")
+    return 2**(n + 2) - 2**n
+
+
+def X_MINUS(n: int) -> int:
+    return X_ZERO(n) - 1
+
+
+def X_PLUS(n: int) -> int:
+    return X_ZERO(n) + 1
+
+
+def Y(n: int) -> int:
+    if n < 1:
+        raise ValueError("Y structural level n must be >= 1")
+    return 2**(n + 1) - 1
+
+
+xy_table = [
+    (n, X_MINUS(n), X_ZERO(n), X_PLUS(n), Y(n))
+    for n in range(1, 5)
+]
+expected_xy_table = [
+    (1, 5, 6, 7, 3),
+    (2, 11, 12, 13, 7),
+    (3, 23, 24, 25, 15),
+    (4, 47, 48, 49, 31),
+]
+
+print("XY structural-level table:", xy_table)
+assert xy_table == expected_xy_table
+
+for n in range(1, 5):
+    assert X_ZERO(n) == shell(2, n, n + 2)
+    assert X_MINUS(n) == X_ZERO(n) - 1
+    assert X_PLUS(n) == X_ZERO(n) + 1
+    assert Y(n) == 2**(n + 1) - 1
+
+for n in range(1, 4):
+    assert X_ZERO(n + 1) == 2 * X_ZERO(n)
+    assert X_MINUS(n + 1) == 2 * X_MINUS(n) + 1
+    assert X_PLUS(n + 1) == 2 * X_PLUS(n) - 1
+    assert Y(n + 1) == 2 * Y(n) + 1
+
+assert X_ZERO(1) == 6
+assert X_ZERO(2) == len(updates) == 12
+assert X_ZERO(3) == shell(2, 3, 5) == 24
+assert Y(4) == 2**5 - 1 == 31
+
+# Coordinate representations of the already-derived fixed ratios.
+assert Fraction(X_PLUS(2), X_ZERO(1)) == R
+assert Fraction(Y(4), X_ZERO(3)) == S
+assert Fraction(q, 1) / S == Fraction(X_ZERO(4), Y(4))
+
+print("XY finite-geometric mapping checks passed")
 print("all exact verification checks passed")

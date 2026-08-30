@@ -1,9 +1,10 @@
 """
 End-to-end minimal example for Zero Parameter Structure.
 
-This script shows that cosmological density ratios, electron-sector quantities,
+This script shows that the minimal causal-inheritance construction generates
+R and S, after which cosmological density ratios, electron-sector quantities,
 gravity, quark masses, neutrino masses, and Higgs/electroweak/strong-coupling
-scale relations can be computed from the same fixed structural definitions.
+scale relations are computed from the same fixed structural definitions.
 
 The file is organized into independent sections so that each section can later
 be transferred to a separate Jupyter Notebook cell with minimal modification.
@@ -38,29 +39,47 @@ AU_M = 149597870700
 # Common structural definitions
 # =========================================================
 
-# Unique finite-geometric realization
-Q = 2
-DIM_A = 2
-DIM_B = 3
-DIM_C = 5
+# Minimal causal-inheritance pair selected by the foundational construction.
+q = 2
+q_sharp = q + 1
 
-# F_2^3 decomposition: 1 | 3 | 4
-VACUUM        = 1
-INNER_NONZERO = Q**DIM_A - 1          # 3
-OUTER_LAYER   = Q**DIM_B - Q**DIM_A   # 4
+def X(n: int, s: int = 0) -> int:
+    """Generated X-sequence: X(n,s) = q_sharp * q^n + s."""
+    return q_sharp * q**n + s
 
-# F_2^5 state counts
-TOTAL_NONZERO = Q**DIM_C - 1          # 31
-OUTER_SHELL   = Q**DIM_C - Q**DIM_B   # 24
+def Y(n: int) -> int:
+    """Generated Y-sequence: Y(n) = q^(n+1) - 1."""
+    return q**(n + 1) - 1
 
-# Legacy structural interface
-P_MIN = 1 + 1
-P_MID = VACUUM + OUTER_LAYER          # 1 + 4 = 5
-P_MAX = INNER_NONZERO + OUTER_LAYER   # 3 + 4 = 7
+def P(n: int) -> int:
+    """Unit-normalized product map: P(n) = X(n)Y(n)/q_sharp."""
+    numerator = X(n) * Y(n)
+    assert numerator % q_sharp == 0
+    return numerator // q_sharp
 
-# Fixed structural ratios
-R = Fraction(2, 1) + Fraction(1, Q * (Q + 1))
-S = Fraction(TOTAL_NONZERO, OUTER_SHELL)
+# Distinguished product-map values.
+P1 = P(1)       # 6
+P2 = P(q)       # 28
+P3 = P(q**2)    # 496
+
+# Structural ratios derived directly from the X/Y hierarchy.
+R = Fraction(X(q, +1), X(1))
+S = Fraction(Y(q**2), X(q_sharp))
+
+# Core structural checks.
+assert (q, q_sharp) == (2, 3)
+assert (P1, P2, P3) == (6, 28, 496)
+assert X(q**2) == q * X(q_sharp)
+assert Fraction(q, 1) / S == Fraction(X(q**2), Y(q**2))
+assert R == Fraction(q, 1) + Fraction(1, P1)
+assert S == Fraction(P3, P1 * q**P1)
+assert R - S == Fraction(P2, q**(P1 - 1))
+
+# Legacy downstream interface retained unchanged for sector formulas.
+# These labels are not the same objects as P1, P2, P3 above.
+P_MIN = 2
+P_MID = 5
+P_MAX = 7
 
 # 3R^2 structural family
 B_alpha = 3 * R**2 / S
@@ -279,11 +298,15 @@ v_LS_st   = Fraction(1, 8) * a_st * B_alpha**-1 * H_st_si**-1
 def main() -> None:
     print("Zero Parameter Structure - Minimal End-to-End Example")
     print("=====================================================")
+    print(f"q       = {q}")
+    print(f"q_sharp = {q_sharp}")
+    print(f"P1,P2,P3= {P1},{P2},{P3}")
+    print(f"R       = {float(R):15.12f} = {R}")
+    print(f"S       = {float(S):15.12f} = {S}")
+    print(f"q/S     = {float(Fraction(q, 1) / S):15.12f} = {Fraction(q, 1) / S}")
     print(f"P_MIN   = {P_MIN}")
     print(f"P_MAX   = {P_MAX}")
     print(f"P_MID   = {P_MID}")
-    print(f"R       = {float(R):15.12f} = {R}")
-    print(f"S       = {float(S):15.12f} = {S}")
     print(f"B_alpha = {float(B_alpha):15.12f} = {B_alpha}")
     print(f"B_q     = {float(B_q):15.12f} = {B_q}")
     print(f"A_d     = {float(A_d):15.12f} = {A_d}")

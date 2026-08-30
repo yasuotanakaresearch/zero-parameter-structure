@@ -16,8 +16,17 @@ import math
 
 me_c2 = 0.510998950690048  # MeV, electron-sector structural value
 
-R = Fraction(13, 6)
-S = Fraction(31, 24)
+q = 2
+q_sharp = q + 1
+
+def X(n, s=0):
+    return q_sharp * q**n + s
+
+def Y(n):
+    return q**(n + 1) - 1
+
+R = Fraction(X(q, +1), X(1))
+S = Fraction(Y(q**2), X(q_sharp))
 
 # Cosmology
 Omega_b = 1 / (3 * R**2 + 3 * R)
@@ -87,33 +96,43 @@ Only structure.
 
 This repository presents a minimal structural framework in which selected physical quantities are examined through fixed dimensionless ratios rather than parameter fitting.
 
-The common inputs are the fixed `R`- and `S`-branches:
+Version 1.0 of the foundational paper derives the common structure from a minimal causal-inheritance update identity. Within the stated conditions, the construction selects
 
 ```math
-R = \frac{13}{6},
+q=2,
 \qquad
-S = \frac{31}{24}.
+q^\sharp=q+1=3,
 ```
 
-In Version 3 of the foundational note, these ratios are no longer introduced only through the earlier path-count representation. A candidate finite-geometric realization is added in which the shell-symmetry condition
+and generates the structural sequences
 
 ```math
-q^c-q^b
+X(n,s)=q^\sharp q^n+s,
+\qquad
+X(n):=X(n,0),
+\qquad
+Y(n)=q^{n+1}-1.
+```
+
+The fixed `R`- and `S`-branches are then extracted directly from this generated \(X/Y\) hierarchy:
+
+```math
+R
 =
-\left|\mathrm{AGL}(a,q)\right|,
+\frac{X(q)^\sharp}{X(1)}
+=
+\frac{13}{6},
 \qquad
-1\le a<b<c,
+S
+=
+\frac{Y(q^2)}{X(q^\sharp)}
+=
+\frac{31}{24}.
 ```
 
-uniquely selects
+The same branches are carried unchanged across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
 
-```math
-(q,a,b,c)=(2,2,3,5).
-```
-
-The same binary structure produces the nonzero-state counts `3`, `7`, and `31`, the layer decomposition `3 | 4 | 24`, and the fixed structural ratios used throughout the repository.
-
-These branches are carried unchanged across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
+Finite geometry is retained only as an independent mathematical consistency check of the already-derived structure; it is not used as the generative basis of \(q\), \(X\), \(Y\), \(P\), \(R\), or \(S\).
 
 The repository provides reproducible Python implementations and paper-level numerical comparisons for the **Structural Origin of** series.
 
@@ -123,29 +142,29 @@ The repository provides reproducible Python implementations and paper-level nume
 
 The framework separates three levels explicitly:
 
-1. minimal structural assumptions,
-2. a candidate finite-geometric realization,
-3. sector-specific physical relations constructed from the resulting fixed ratios.
+1. the pre-observational minimal-axiom layer \(L1\),
+2. downstream structural constructions generated from \(L1\),
+3. sector-specific physical relations built from the fixed structural ratios.
 
-The finite-geometric realization uses the unique solution
-
-```math
-(q,a,b,c)=(2,2,3,5)
-```
-
-of the shell-symmetry condition above. In the binary realization,
+The logical direction of the foundational construction is
 
 ```math
-\mathbb{F}_2^2
-\subset
-\mathbb{F}_2^3
-\subset
-\mathbb{F}_2^5,
+\text{causal inheritance}
+\longrightarrow
+(q,q^\sharp)
+\longrightarrow
+(X,Y),
 ```
 
-the state counts are fixed rather than fitted. The ratios `R` and `S` are then interpreted as common structural ratios generated within this realization.
+followed by the two downstream constructions
 
-This finite geometry is used as a structural representation; it is not identified with physical spacetime and does not replace standard general relativity or quantum field theory. The causal interpretation of the framework is intended to remain compatible with standard relativistic causal structure.
+```math
+(X,Y)\longrightarrow P,
+\qquad
+(X,Y)\longrightarrow(R,S).
+```
+
+No spacetime dimension, physical time, particle property, coupling constant, finite geometry, group theory, string theory, or cosmological observable is used to select \(q\) or to define the generated \(X/Y\) hierarchy.
 
 The same fixed branches are carried unchanged across different sectors:
 
@@ -178,121 +197,135 @@ They are reconstructed from a common fixed structure.
 
 ## Common Structural Definitions
 
-### Finite-geometric backbone
+### Minimal-axiom backbone
 
-Version 3 of the foundational note uses a candidate finite-geometric realization in which
+Use the discrete unit-shift notation
 
 ```math
-q^c-q^b
-=
-\left|\mathrm{AGL}(a,q)\right|,
+A^\sharp:=A+1,
 \qquad
-1\le a<b<c.
+A^\flat:=A-1.
 ```
 
-The unique finite-field and dimension solution is
+The minimal causal-inheritance conditions select
 
 ```math
-(q,a,b,c)=(2,2,3,5).
-```
-
-The corresponding nested binary spaces are
-
-```math
-\mathbb{F}_2^2
-\subset
-\mathbb{F}_2^3
-\subset
-\mathbb{F}_2^5.
-```
-
-For the first inclusion,
-
-```math
-\mathbb{F}_2^3
-=
-\{0\}
-\sqcup
-\left(\mathbb{F}_2^2\setminus\{0\}\right)
-\sqcup
-\left(\mathbb{F}_2^3\setminus\mathbb{F}_2^2\right),
-```
-
-with cardinalities
-
-```math
-1\,|\,3\,|\,4.
-```
-
-This gives the legacy structural interface in the form
-
-```math
-P_{\min}=1+1=2,
+q=2,
 \qquad
-P_{\mathrm{mid}}=1+4=5,
-\qquad
-P_{\max}=3+4=7.
+q^\sharp=q+1=3.
 ```
 
-The earlier identity
+The generated structural sequences are
 
 ```math
-P_{\mathrm{mid}}
-=
-P_{\max}-P_{\min}
-=
-5
+X(n,s)=q^\sharp q^n+s,
+\qquad
+X(n):=X(n,0),
 ```
-
-remains numerically valid, but is treated as a compatibility identity rather than the defining relation for `P_mid`.
-
-The higher binary space gives
 
 ```math
-2^5-1=31,
-\qquad
-2^3-1=7,
-\qquad
-2^5-2^3=24.
+Y(n)=q^{n+1}-1.
 ```
 
-The ratio `S` is the total-to-outer-shell normalization
+### Normalized product map
+
+The unit-normalized bilinear product is
 
 ```math
-S
+P(n)
 =
-\frac{2^5-1}{2^5-2^3}
-=
-\frac{31}{24}.
+\frac{X(n)Y(n)}{q^\sharp}.
 ```
 
-The ratio `R` is the unique common value of the projective-incidence and affine-action normalizations at `q=2`:
+At the distinguished arguments \(1,q,q^2\),
+
+```math
+\bigl(P(1),P(q),P(q^2)\bigr)
+=
+(6,28,496).
+```
+
+These coincide with the first three even perfect numbers, but this correspondence is downstream of the minimal \(q\to X/Y\) construction.
+
+### Structural ratios \(R\) and \(S\)
+
+The structural ratios are defined directly from the generated \(X/Y\) hierarchy:
 
 ```math
 R
 =
-2+\frac{1}{q(q+1)}
-=
-\frac{13}{6}.
-```
-
-The earlier forms are recovered exactly:
-
-```math
-R
-=
-2\left(1+\frac{P_{\min}}{24}\right)
+\frac{X(q)^\sharp}{X(1)}
 =
 \frac{13}{6},
-\qquad
+```
+
+```math
 S
 =
-1+\frac{P_{\max}}{24}
+\frac{Y(q^2)}{X(q^\sharp)}
 =
 \frac{31}{24}.
 ```
 
-Thus the existing sector-level interface is preserved while the foundational construction is strengthened.
+Since
+
+```math
+X(q^2)=qX(q^\sharp)
+```
+
+for the selected pair, the second relation gives
+
+```math
+\frac{q}{S}
+=
+\frac{X(q^2)}{Y(q^2)}
+=
+\frac{48}{31}.
+```
+
+The product map provides exact equivalent closure representations,
+
+```math
+R
+=
+q+\frac{1}{P(1)},
+```
+
+```math
+S
+=
+\frac{P(q^2)}
+{P(1)q^{P(1)}},
+```
+
+```math
+R-S
+=
+\frac{P(q)}
+{q^{P(1)-1}}
+=
+\frac{7}{8},
+```
+
+but these are retained as equivalent forms rather than as the primary definitions of \(R\) and \(S\).
+
+### Legacy downstream interface
+
+The existing sector-level formulas use the legacy labels
+
+```math
+P_{\min}=2,
+\qquad
+P_{\mathrm{mid}}=5,
+\qquad
+P_{\max}=7.
+```
+
+These values are retained unchanged for compatibility with the current paper-series formulas. They are downstream compatibility labels and should not be confused with the foundational product-map values
+
+```math
+\bigl(P(1),P(q),P(q^2)\bigr)=(6,28,496).
+```
 
 ### Derived common branch structure
 
@@ -355,7 +388,7 @@ A_u
 
 These branch quantities are derived algebraic descendants of `R` and `S`, not additional independent structural inputs. They provide the common interface to the sector-specific relations below.
 
-**Structure map — Finite-Geometric and Common Branch Structure**
+**Structure map — Minimal-Axiom and Common Branch Structure**
 
 ```mermaid
 ---
@@ -368,16 +401,12 @@ config:
     lineColor: '#00ffff'
 ---
 flowchart TB
-    subgraph FiniteGeometry["Candidate Finite-Geometric Realization"]
-        U["qᶜ − qᵇ = |AGL(a,q)|"]
-        D["(q,a,b,c) = (2,2,3,5)"]
-        L["1 | 3 | 4,  3 | 4 | 24"]
-        P["Pmin = 2,  Pmid = 5,  Pmax = 7"]
-    end
-
-    subgraph Common["Common Structure"]
-        R["R = 13/6"]
-        S["S = 31/24"]
+    subgraph MinimalAxioms["Minimal Axiomatic Structure"]
+        C["causal inheritance update identity"]
+        Q["q = 2,  q♯ = 3"]
+        XY["X(n,s) = q♯qⁿ+s;  Y(n) = qⁿ⁺¹−1"]
+        P["P(1), P(q), P(q²) = 6, 28, 496"]
+        RS["R = 13/6;  S = 31/24;  q/S = 48/31"]
     end
 
     subgraph CommonBranch["Derived Common Branch Structure"]
@@ -389,13 +418,11 @@ flowchart TB
         Au["Au = πRAd = (8π/3)Bα"]
     end
 
-    U --> D
-    D --> L
-    L --> P
-    D --> R
-    D --> S
-    R --> branch_matrix
-    S --> branch_matrix
+    C --> Q
+    Q --> XY
+    XY --> P
+    XY --> RS
+    RS --> branch_matrix
     branch_matrix --> Balpha
     branch_matrix --> Bq
     branch_matrix --> Ad
@@ -1562,7 +1589,7 @@ The notebook can be opened and executed directly in Google Colab without install
 
 ### `finite_geometric_verification.py`
 
-An exact-arithmetic verification script for the foundational finite-geometric construction. It checks the finite-field uniqueness search, binary layer counts, affine symmetry structure, orbit--stabilizer relations, and the `R` and `S` consistency relations.
+An exact-arithmetic consistency-check script for the finite-geometric appendix of the foundational paper. It checks the finite-field uniqueness search, binary layer counts, affine symmetry structure, orbit--stabilizer relations, and their agreement with the already-derived `R` and `S` values.
 
 ```bash
 python finite_geometric_verification.py
@@ -1591,14 +1618,14 @@ python run_papers.py --all
 
 ## Papers
 
-### Foundational Note — Fixed Ratios
+### Foundational Paper — Minimal Axioms
 
-**Structural Origin of the Fixed Ratios R and S:  
-A Foundational Technical Note on Causal Paths and Structural Branches**
+**Minimal Axioms of Causal Inheritance:  
+An Axiomatic Construction from Update Identity to Structural Generation**
 
-- https://doi.org/10.5281/zenodo.21931059
+- https://doi.org/10.5281/zenodo.18371034
 
-Version 3 substantially revises the construction of the fixed `R`- and `S`-branches. It introduces a candidate finite-geometric realization, proves the uniqueness of the binary dimension chain `(q,a,b,c)=(2,2,3,5)` under the shell-symmetry condition, derives `S=31/24` as a total-to-outer-shell ratio, and obtains `R=13/6` from the consistency of projective-incidence and affine-action normalizations. The fixed values remain the common inputs used throughout the subsequent paper series.
+Version 1.0 derives the common structure from a minimal causal-inheritance update identity. The construction selects `(q,q♯)=(2,3)`, generates the `X` and `Y` sequences and the normalized product map `P`, and defines `R=13/6` and `S=31/24` directly from the generated `X/Y` hierarchy. The product-map formulas are retained as exact equivalent closure relations. Finite geometry is separated into an independent mathematical consistency check.
 
 ---
 
@@ -1705,7 +1732,7 @@ python -m code.paper7_cosmological_kinematics
 
 All public results can be reproduced without external fitting or optimization.
 
-The finite-geometric construction used by the foundational note can be checked independently with exact arithmetic:
+The independent finite-geometric consistency check can be reproduced with exact arithmetic:
 
 ```bash
 python finite_geometric_verification.py
@@ -1776,7 +1803,7 @@ The paper-level outputs report:
 
 The numerical relations in this repository are presented as structural correspondences between fixed dimensionless ratios and observed reference quantities.
 
-The finite-geometric construction of Version 3 is a candidate structural realization. Its mathematical consequences are separated from the additional physical interpretation of those structures. In particular, the finite vector spaces are not identified with physical spacetime, and the construction is not presented as a replacement for standard general relativity or quantum field theory.
+Version 1.0 places the generative basis at the pre-observational minimal-axiom layer \(L1\). The finite-geometric appendix is an independent mathematical consistency check of the already-derived structure and is not used to select `q` or define `X`, `Y`, `P`, `R`, or `S`. Sector-specific physical interpretations are downstream of this structural layer.
 
 The sector relations are not introduced as fitted empirical formulas. Each relation uses the same fixed structural inputs and is evaluated by direct comparison with the corresponding reference values.
 
