@@ -111,10 +111,75 @@ def print_rows(rows: list[tuple[str, float, str, str]]) -> None:
 # Cosmology
 # =========================================================
 
-Omega_b  = 1 / (3 * R**2 + 3 * R)
-Omega_m  = 3 * R    * Omega_b
-Omega_L  = 3 * R**2 * Omega_b
-Omega_dm = Omega_m - Omega_b
+# Paper 1 starts from the finite L1 candidate set
+#   R(1..4), S(1..4)
+# and reduces it directly to R(q) and S(q^2) by exact
+# rational square-root closure.  The rest of this end-to-end
+# example continues with the R(q) survivor, as before.
+
+def R_map(n: int) -> Fraction:
+    return Fraction(q * X(n, +1), X(n))
+
+
+def S_map(n: int) -> Fraction:
+    return Fraction(q * Y(n), X(n))
+
+
+def cosmology_from_T(T: Fraction):
+    omega_L = T / (1 + T)
+    omega_m = 1 / (1 + T)
+    omega_b = 1 / (3 * T * (1 + T))
+    omega_dm = omega_m - omega_b
+
+    assert omega_m**2 == 3 * omega_L * omega_b
+    return omega_L, omega_dm, omega_b, omega_m
+
+
+def Zc_from_densities(values):
+    omega_L, omega_dm, _, omega_m = values
+    return (omega_dm + omega_m) / omega_L
+
+
+def rational_sqrt_fraction(value: Fraction):
+    if value < 0:
+        return None
+
+    sn = math.isqrt(value.numerator)
+    sd = math.isqrt(value.denominator)
+
+    if sn * sn == value.numerator and sd * sd == value.denominator:
+        return Fraction(sn, sd)
+
+    return None
+
+
+cosmology_candidates = []
+for label, func in (("R", R_map), ("S", S_map)):
+    for n in range(1, 5):
+        T = func(n)
+        values = cosmology_from_T(T)
+        zc = Zc_from_densities(values)
+        root = rational_sqrt_fraction(zc)
+        cosmology_candidates.append((label, n, T, values, zc, root))
+
+cosmology_survivors = [
+    row for row in cosmology_candidates
+    if row[5] is not None
+]
+
+assert [
+    (label, n, T, root)
+    for label, n, T, _, _, root in cosmology_survivors
+] == [
+    ("R", 2, Fraction(13, 6), Fraction(12, 13)),
+    ("S", 4, Fraction(31, 24), Fraction(36, 31)),
+]
+
+assert R_map(q) == R
+assert S_map(q**2) == S
+
+# Downstream sectors in this end-to-end example continue with R(q).
+Omega_L, Omega_dm, Omega_b, Omega_m = cosmology_from_T(R)
 
 
 # =========================================================
@@ -314,8 +379,20 @@ def main() -> None:
     print(f"A_u     = {A_u:15.12f}")
     print()
 
-    print("Cosmology")
-    print("---------")
+    print("Cosmology - finite L1 selection")
+    print("-------------------------------")
+    print(f"{'Candidate':<10}{'T':>8}{'sqrt(Zc)':>12}")
+    print("-" * 30)
+    for label, n, T, _, _, root in cosmology_candidates:
+        root_text = "-" if root is None else str(root)
+        print(f"{label + '(' + str(n) + ')':<10}{str(T):>8}{root_text:>12}")
+    print()
+    print("8 -> 2 survivors:")
+    print("  R(q)   = R(2) = 13/6   with sqrt(Zc) = 12/13")
+    print("  S(q^2) = S(4) = 31/24  with sqrt(Zc) = 36/31")
+    print()
+    print("R(q) density realization used downstream")
+    print("-----------------------------------------")
     print(f"Omega_L  = {float(Omega_L):.12f} = {Omega_L}")
     print(f"Omega_m  = {float(Omega_m):.12f} = {Omega_m}")
     print(f"Omega_dm = {float(Omega_dm):.12f} = {Omega_dm}")

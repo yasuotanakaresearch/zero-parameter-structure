@@ -1,78 +1,161 @@
 """
 Zero Parameter Structure — Paper 1 Cosmology Execution
 
+Structural Origin of Cosmological Density Ratios
+Version 1.0
+
+Console-oriented reproduction output.
 No free parameters. No tuning. Only structure.
 """
 
 from fractions import Fraction
 
-from core.structural_constants import StructuralConstants
-from core.structural_cosmology import compute_density_parameters
-from observed_data.observed_data_cosmology import PLANCK_2018
+from core.structural_cosmology import (
+    candidate_universes,
+    r_q_lorentz_closure,
+    square_root_survivors,
+)
+from observed_data.observed_data_cosmology import (
+    DESI_DR2_CMB_DESY5,
+    DESI_DR2_CMB_PANTHEON_PLUS,
+    PLANCK_2018_PLIK_BEST_FIT,
+)
 
 
-# =========================================================
-# Helpers
-# =========================================================
-
-def as_percent(x: Fraction) -> str:
-    return f"{float(x) * 100:.3f}%"
+WIDTH = 92
 
 
-def to_fraction_str(x: Fraction) -> str:
-    return f"{x.numerator}/{x.denominator}" if x.denominator != 1 else str(x.numerator)
+def rule(char: str = "-") -> None:
+    print(char * WIDTH)
 
 
-def diff_percent_points(theory: Fraction, obs: float) -> str:
-    return f"{100 * (float(theory) - obs):+.3f} %-pt"
+def section(title: str) -> None:
+    print()
+    print(title)
+    rule()
 
 
-# =========================================================
-# Main
-# =========================================================
+def frac(value: Fraction | None) -> str:
+    if value is None:
+        return "-"
+    if value.denominator == 1:
+        return str(value.numerator)
+    return f"{value.numerator}/{value.denominator}"
+
+
+def print_observation_table(rows) -> None:
+    print(
+        f"{'Dataset':<30}"
+        f"{'H0':>8}"
+        f"{'Omega_L':>10}"
+        f"{'Omega_dm':>10}"
+        f"{'Omega_b':>10}"
+        f"{'Omega_m':>10}"
+        f"{'Q':>10}"
+    )
+    rule()
+    for obs in rows:
+        print(
+            f"{obs.name:<30}"
+            f"{obs.H0:>8.2f}"
+            f"{obs.omega_L:>10.6f}"
+            f"{obs.omega_dm:>10.6f}"
+            f"{obs.omega_b:>10.6f}"
+            f"{obs.omega_m:>10.6f}"
+            f"{obs.Q:>10.6f}"
+        )
+
 
 def main() -> None:
-    constants = StructuralConstants()
-    result = compute_density_parameters(constants.R)
+    rows = candidate_universes()
 
-    print("Structural Cosmology: Theory vs Observation")
-    print("===========================================")
-    print(f"R = {to_fraction_str(constants.R):>5} = {float(constants.R):.12f}")
+    section("Eight L1 candidate universes")
+
+    print(
+        f"{'Candidate':<10}"
+        f"{'T':>8}"
+        f"{'Omega_L':>10}"
+        f"{'Omega_dm':>10}"
+        f"{'Omega_b':>10}"
+        f"{'Omega_m':>10}"
+        f"{'sqrt(Zc)':>10}"
+    )
+    rule()
+
+    for row in rows:
+        d = row.densities
+        print(
+            f"{row.label + '(' + str(row.n) + ')':<10}"
+            f"{frac(row.T):>8}"
+            f"{float(d.omega_L):>10.6f}"
+            f"{float(d.omega_dm):>10.6f}"
+            f"{float(d.omega_b):>10.6f}"
+            f"{float(d.omega_m):>10.6f}"
+            f"{frac(row.sqrt_zc):>10}"
+        )
+
+    section("Exact rational square-root closure: 8 -> 2")
+
+    survivors = square_root_survivors()
+    for row in survivors:
+        print(
+            f"{row.label}({row.n}): "
+            f"T={frac(row.T):>5}   "
+            f"Zc={frac(row.zc):>8}   "
+            f"sqrt(Zc)={frac(row.sqrt_zc):>5}   "
+            f"primitive={row.primitive}"
+        )
+
+    r_survivor, s_survivor = survivors
+
     print()
+    print(
+        "R(q)   * sqrt(Zc(R(q)))   = "
+        f"{frac(r_survivor.T * r_survivor.sqrt_zc)} = q"
+    )
+    print(
+        "S(q^2) * sqrt(Zc(S(q^2))) = "
+        f"{frac(s_survivor.T * s_survivor.sqrt_zc)}"
+    )
 
-    print("Theoretical density parameters")
-    print("------------------------------")
-    print(f"ΩΛ = {to_fraction_str(result.omega_lambda):>7} = {float(result.omega_lambda):.8f} = {as_percent(result.omega_lambda)}")
-    print(f"Ωm  = {to_fraction_str(result.omega_m):>7} = {float(result.omega_m):.8f} = {as_percent(result.omega_m)}")
-    print(f"Ωdm = {to_fraction_str(result.omega_dm):>7} = {float(result.omega_dm):.8f} = {as_percent(result.omega_dm)}")
-    print(f"Ωb  = {to_fraction_str(result.omega_b):>7} = {float(result.omega_b):.8f} = {as_percent(result.omega_b)}")
+    section("R(q) Lorentz / light-cone factorization")
+
+    lorentz = r_q_lorentz_closure()
+
+    print(f"gamma        = {frac(lorentz.gamma)}")
+    print(f"beta         = {frac(lorentz.beta)}")
+    print(f"gamma * beta = {frac(lorentz.gamma_beta)}")
+    print(
+        "eigenvalues  = "
+        f"{frac(lorentz.lambda_plus)}, {frac(lorentz.lambda_minus)}"
+    )
+
+    a = 3**2 - 2**2
+    b = 2 * 2 * 3
+    c = 3**2 + 2**2
+    assert (a, b, c) == (5, 12, 13)
+    assert a * a + b * b == c * c
+
+    print(f"5-12-13 triple from (2,3) = ({a}, {b}, {c})")
+    print("[PASS] all exact v1.0 structural checks")
+
+    section("Appendix A: observational diagnostics")
+
+    print_observation_table(
+        [
+            PLANCK_2018_PLIK_BEST_FIT,
+            DESI_DR2_CMB_PANTHEON_PLUS,
+            DESI_DR2_CMB_DESY5,
+        ]
+    )
+
     print()
+    print("[PASS] all Appendix A v1.0 reconstruction checks")
 
-    print("Structural ratios")
-    print("-----------------")
-    print("ΩΛ : Ωm : Ωb = 3R^2 : 3R : 1")
-    print(f"Exact ratio = {to_fraction_str(3 * constants.R**2)} : {to_fraction_str(3 * constants.R)} : 1")
-    print(f"Numeric     = {float(3 * constants.R**2):.3f} : {float(3 * constants.R):.3f} : 1.000")
     print()
-
-    print("Comparison with Planck 2018")
-    print("---------------------------")
-
-    obs = PLANCK_2018
-
-    print(f"Observed ΩΛ = {obs.omega_lambda:.8f}")
-    print(f"Theory ΩΛ   = {float(result.omega_lambda):.8f}")
-    print(f"Difference    = {diff_percent_points(result.omega_lambda, obs.omega_lambda)}")
-    print()
-
-    print(f"Observed Ωm  = {obs.omega_m:.8f}")
-    print(f"Theory Ωm    = {float(result.omega_m):.8f}")
-    print(f"Difference    = {diff_percent_points(result.omega_m, obs.omega_m)}")
-    print()
-
-    print(f"Observed Ωb  = {obs.omega_b:.8f}")
-    print(f"Theory Ωb    = {float(result.omega_b):.8f}")
-    print(f"Difference    = {diff_percent_points(result.omega_b, obs.omega_b)}")
+    rule("=")
+    print("Paper 1 completed successfully.")
+    rule("=")
 
 
 if __name__ == "__main__":

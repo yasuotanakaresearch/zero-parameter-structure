@@ -81,6 +81,16 @@ def P(n: int) -> int:
     return numerator // q_sharp
 
 
+def R(n: int) -> Fraction:
+    """L1 ratio map: R(n) = q * X(n,+1) / X(n)."""
+    return Fraction(q * X(n, +1), X(n))
+
+
+def S(n: int) -> Fraction:
+    """L1 ratio map: S(n) = q * Y(n) / X(n)."""
+    return Fraction(q * Y(n), X(n))
+
+
 P1 = P(1)
 P2 = P(q)
 P3 = P(q**2)

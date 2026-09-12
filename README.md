@@ -29,6 +29,9 @@ R = Fraction(X(q, +1), X(1))
 S = Fraction(Y(q**2), X(q_sharp))
 
 # Cosmology
+# This quick example displays the R(q) survivor.
+# The full eight-candidate 8 -> 2 search is reproduced by:
+#     python -m code.paper1_cosmology
 Omega_b = 1 / (3 * R**2 + 3 * R)
 Omega_m = 3 * R * Omega_b
 Omega_L = 3 * R**2 * Omega_b
@@ -55,7 +58,7 @@ m_s = me_c2 * K_q["s"] * B_q * A_d
 m_t = me_c2 * K_q["t"] * B_q * A_u**2 * 10**-3  # GeV
 m_b = me_c2 * K_q["b"] * B_q * A_d**2 * 10**-3  # GeV
 
-print("Cosmology")
+print("Cosmology — R(q) survivor")
 print(f"Omega_L  = {float(Omega_L):.12f} = {Omega_L}")
 print(f"Omega_m  = {float(Omega_m):.12f} = {Omega_m}")
 print(f"Omega_dm = {float(Omega_dm):.12f} = {Omega_dm}")
@@ -71,7 +74,7 @@ print("mb =", m_b, "GeV")
 ```
 
 ```text
-Cosmology
+Cosmology — R(q) survivor
 Omega_L  = 0.684210526316 = 13/19
 Omega_m  = 0.315789473684 = 6/19
 Omega_dm = 0.267206477733 = 66/247
@@ -436,7 +439,8 @@ flowchart TB
 
 The current public release includes:
 
-- Cosmological density relations
+- Cosmological density relations with finite L1 candidate generation
+- Exact `8 -> 2` cosmological square-root closure
 - Reconstruction of `ΩΛ`, `Ωm`, `Ωdm`, and `Ωb`
 - Electromagnetic coupling and charged-particle mass hierarchy
 - Gravity-sector structural relations
@@ -447,25 +451,123 @@ The current public release includes:
 
 ### Cosmology
 
-The density parameters are generated from the same structural ratio `R`:
+Paper 1 no longer assumes a single cosmological ratio at the start.  
+The cosmological sector begins from the finite pre-exception L1 candidate set
 
 ```math
-\Omega_b = \frac{1}{3R^2+3R},
-\qquad
-\Omega_m = 3R\Omega_b,
-\qquad
-\Omega_\Lambda = 3R^2\Omega_b,
-\qquad
-\Omega_{dm} = \Omega_m - \Omega_b.
+\mathcal U_8
+=
+\{R(1),R(2),R(3),R(4),S(1),S(2),S(3),S(4)\}.
 ```
 
-These relations imply the compact consistency relation
+For a positive structural ratio \(T\), define the normalized density realization
 
 ```math
-\Omega_m^2 = 3\Omega_\Lambda\Omega_b.
+\Omega_\Lambda(T)=\frac{T}{T+1},
+\qquad
+\Omega_m(T)=\frac{1}{T+1},
 ```
 
-**Structure map — Cosmological Density Structure**
+```math
+\Omega_b(T)=\frac{1}{3T(T+1)},
+\qquad
+\Omega_{dm}(T)=\Omega_m(T)-\Omega_b(T).
+```
+
+Equivalently,
+
+```math
+\Omega_\Lambda:\Omega_b:\Omega_m
+=
+1:\frac{1}{3T^2}:\frac{1}{T}.
+```
+
+Every candidate therefore satisfies the exact quadratic relation
+
+```math
+\Omega_m^2=3\Omega_\Lambda\Omega_b.
+```
+
+For each of the eight candidates, define the normalization-independent structural ratio
+
+```math
+Z_c(T)
+=
+\frac{\Omega_{dm}(T)+\Omega_m(T)}
+{\Omega_\Lambda(T)}
+=
+\frac{6T-1}{3T^2}.
+```
+
+The exact rational square-root closure
+
+```math
+\sqrt{Z_c(T)}\in\mathbb{Q}
+```
+
+reduces the finite L1 set directly as
+
+```math
+8\longrightarrow2,
+```
+
+with the two survivors
+
+```math
+R(q)=R(2)=\frac{13}{6},
+\qquad
+S(q^2)=S(4)=\frac{31}{24}.
+```
+
+Their exact square-root factors are
+
+```math
+\sqrt{Z_c(R(q))}=\frac{12}{13},
+\qquad
+\sqrt{Z_c(S(q^2))}=\frac{36}{31}.
+```
+
+The corresponding exact density quadruples are
+
+```math
+(\Omega_\Lambda,\Omega_{dm},\Omega_b,\Omega_m)_{R(q)}
+=
+\frac{1}{247}(169,66,12,78),
+```
+
+```math
+(\Omega_\Lambda,\Omega_{dm},\Omega_b,\Omega_m)_{S(q^2)}
+=
+\frac{1}{1705}(961,552,192,744).
+```
+
+The \(R(q)\) survivor also admits the real timelike Lorentz/light-cone factorization
+
+```math
+\gamma=\frac{13}{12},
+\qquad
+\beta=\frac{5}{13},
+\qquad
+\gamma\beta=\frac{5}{12},
+```
+
+with reciprocal light-cone eigenvalues
+
+```math
+\lambda_+=\frac{3}{2},
+\qquad
+\lambda_-=\frac{2}{3}.
+```
+
+This Lorentz/light-cone factorization is an internal structural interpretation of the \(R(q)\) survivor; it is **not** used as an additional L1 filter. The theoretical selection therefore terminates at the pair
+
+```math
+\{R(q),S(q^2)\}.
+```
+
+Observational values are used only downstream for comparison and are not used in the `8 -> 2` selection.
+
+**Structure map — Cosmological Candidate Reduction**
 
 ```mermaid
 ---
@@ -478,32 +580,22 @@ config:
     lineColor: '#00ffff'
 ---
 flowchart TB
-    subgraph Common["Common Structure"]
-        R["R = 13/6"]
-    end
+    L1["L1 pre-exception window n = 1,2,3,4"]
+    U8["8 candidates: R(1..4), S(1..4)"]
+    Density["Density map: ΩΛ, Ωdm, Ωb, Ωm"]
+    Zc["Zc(T) = (Ωdm + Ωm)/ΩΛ"]
+    Closure["sqrt(Zc) ∈ Q"]
+    U2["2 survivors: R(q)=13/6, S(q²)=31/24"]
+    Lorentz["R(q): γ=13/12, β=5/13, λ±=3/2,2/3"]
+    Obs["Downstream observational comparison"]
 
-    Phi_m["Φm = 1/R"]
-    Phi_b["Φb = 1/(3R²)"]
-
-    subgraph Cosmology["Cosmology"]
-        Omage_L["ΩΛ = 3R²Ωb"]
-        Omage_m["Ωm = 3RΩb"]
-        Omage_b["Ωb = 1/(3R² + 3R)"]
-        Omage_m2["Ωm² = 3ΩΛΩb"]
-    end
-
-    R --> Phi_m
-    R --> Phi_b
-    R --> Omage_L
-    R --> Omage_m
-    R --> Omage_b
-    Omage_L --> Omage_m2
-    Omage_m --> Omage_m2
-    Omage_b --> Omage_m2
-    Phi_m <--> Omage_m
-    Phi_b <--> Omage_b
-
-    linkStyle 8,9 stroke:#FF0000
+    L1 --> U8
+    U8 --> Density
+    Density --> Zc
+    Zc --> Closure
+    Closure --> U2
+    U2 --> Lorentz
+    U2 --> Obs
 ```
 
 ### Electromagnetic Coupling and Mass Hierarchy
@@ -1414,11 +1506,31 @@ Detailed numerical outputs are reproduced by running the corresponding paper scr
 
 ### Cosmology
 
-| Quantity | Theory | Observation | Difference |
-|---|---:|---:|---:|
-| $\Omega_\Lambda$ | 0.68421053 | 0.68500000 | -0.079 %-pt |
-| $\Omega_m$ | 0.31578947 | 0.31500000 | +0.079 %-pt |
-| $\Omega_b$ | 0.04858300 | 0.04930923 | -0.073 %-pt |
+The L1 structural analysis terminates at two exact survivors.  
+Observation is shown only as a downstream comparison.
+
+| Case | $\Omega_\Lambda$ | $\Omega_{dm}$ | $\Omega_b$ | $\Omega_m$ | $Q$ |
+|---|---:|---:|---:|---:|---:|
+| $R(q)$ universe | 0.684211 | 0.267206 | 0.048583 | 0.315789 | 1.000000 |
+| $S(q^2)$ universe | 0.563636 | 0.323754 | 0.112610 | 0.436364 | 1.000000 |
+| Planck 2018 Plik best fit  | 0.684200 | 0.266411 | 0.049389 | 0.315800 | 0.991848 |
+| DESI+CMB+Pantheon+ | 0.688600 | 0.262734 | 0.048666 | 0.311400 | 0.982114 |
+| DESI+CMB+DESY5 | 0.680900 | 0.269305 | 0.049795 | 0.319100 | 1.000530 |
+
+Here
+
+```math
+Q
+=
+\sqrt{
+\frac{\Omega_m^2}
+{3\Omega_\Lambda\Omega_b}
+}.
+```
+
+The Planck row is reconstructed from the published central values
+\(H_0=67.37\), \(\Omega_m=0.3147\), and
+\(\omega_b=\Omega_bh^2=0.02233\).
 
 ### Electromagnetic Coupling and Mass Hierarchy
 
@@ -1635,6 +1747,10 @@ Version 1.0 derives the common structure from a minimal causal-inheritance updat
 
 - https://doi.org/10.5281/zenodo.19028107
 
+Version 1.0 generates eight finite L1 cosmological candidates and reduces them directly to
+\(R(q)=R(2)=13/6\) and \(S(q^2)=S(4)=31/24\) through the exact rational square-root closure
+\(\sqrt{Z_c(T)}\in\mathbb{Q}\). Observational comparison is downstream and is not used in the `8 -> 2` selection.
+
 Corresponding code:
 
 ```bash
@@ -1806,6 +1922,8 @@ The numerical relations in this repository are presented as structural correspon
 Version 1.0 places the generative basis at the pre-observational minimal-axiom layer \(L1\). The finite-geometric appendix is an independent mathematical consistency check of the already-derived structure and is not used to select `q` or define `X`, `Y`, `P`, `R`, or `S`. Sector-specific physical interpretations are downstream of this structural layer.
 
 The sector relations are not introduced as fitted empirical formulas. Each relation uses the same fixed structural inputs and is evaluated by direct comparison with the corresponding reference values.
+
+In Paper 1, the cosmological L1 analysis is explicitly finite and pre-observational: the eight generated ratio-map candidates are reduced to two by exact rational square-root closure before any Planck or DESI value is consulted.
 
 For quantities with scheme or scale dependence, such as quark masses, the comparison should be interpreted as agreement with the relevant observed mass scale rather than tuning to a single central value.
 
