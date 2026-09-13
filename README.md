@@ -104,38 +104,38 @@ Version 1.0 of the foundational paper derives the common structure from a minima
 ```math
 q=2,
 \qquad
-q^\sharp=q+1=3,
+q_\sharp=q+1=3,
 ```
 
 and generates the structural sequences
 
 ```math
-X(n,s)=q^\sharp q^n+s,
+X(n,s)=q_\sharp q^n+s,
 \qquad
 X(n):=X(n,0),
 \qquad
 Y(n)=q^{n+1}-1.
 ```
 
-The fixed `R`- and `S`-branches are then extracted directly from this generated \(X/Y\) hierarchy:
+The fixed `R`- and `S`-branches are then extracted directly from this generated $X/Y$ hierarchy:
 
 ```math
 R
 =
-\frac{X(q)^\sharp}{X(1)}
+\frac{X(q)_\sharp}{X(1)}
 =
 \frac{13}{6},
 \qquad
 S
 =
-\frac{Y(q^2)}{X(q^\sharp)}
+\frac{Y(q^2)}{X(q_\sharp)}
 =
 \frac{31}{24}.
 ```
 
 The same branches are carried unchanged across cosmological density relations, electromagnetic coupling, charged-particle mass hierarchy, gravity-sector relations, quark-mass hierarchy, neutrino mass relations, Higgs, electroweak, Yukawa, and strong-coupling scale relations, and cosmological and local kinematic scales.
 
-Finite geometry is retained only as an independent mathematical consistency check of the already-derived structure; it is not used as the generative basis of \(q\), \(X\), \(Y\), \(P\), \(R\), or \(S\).
+Finite geometry is retained only as an independent mathematical consistency check of the already-derived structure; it is not used as the generative basis of $q$, $X$, $Y$, $P$, $R$, or $S$.
 
 The repository provides reproducible Python implementations and paper-level numerical comparisons for the **Structural Origin of** series.
 
@@ -145,8 +145,8 @@ The repository provides reproducible Python implementations and paper-level nume
 
 The framework separates three levels explicitly:
 
-1. the pre-observational minimal-axiom layer \(L1\),
-2. downstream structural constructions generated from \(L1\),
+1. the pre-observational minimal-axiom layer $L1$,
+2. downstream structural constructions generated from $L1$,
 3. sector-specific physical relations built from the fixed structural ratios.
 
 The logical direction of the foundational construction is
@@ -154,7 +154,7 @@ The logical direction of the foundational construction is
 ```math
 \text{causal inheritance}
 \longrightarrow
-(q,q^\sharp)
+(q,q_\sharp)
 \longrightarrow
 (X,Y),
 ```
@@ -167,7 +167,7 @@ followed by the two downstream constructions
 (X,Y)\longrightarrow(R,S).
 ```
 
-No spacetime dimension, physical time, particle property, coupling constant, finite geometry, group theory, string theory, or cosmological observable is used to select \(q\) or to define the generated \(X/Y\) hierarchy.
+No spacetime dimension, physical time, particle property, coupling constant, finite geometry, group theory, string theory, or cosmological observable is used to select $q$ or to define the generated $X/Y$ hierarchy.
 
 The same fixed branches are carried unchanged across different sectors:
 
@@ -205,7 +205,7 @@ They are reconstructed from a common fixed structure.
 Use the discrete unit-shift notation
 
 ```math
-A^\sharp:=A+1,
+A_\sharp:=A+1,
 \qquad
 A^\flat:=A-1.
 ```
@@ -215,13 +215,13 @@ The minimal causal-inheritance conditions select
 ```math
 q=2,
 \qquad
-q^\sharp=q+1=3.
+q_\sharp=q+1=3.
 ```
 
 The generated structural sequences are
 
 ```math
-X(n,s)=q^\sharp q^n+s,
+X(n,s)=q_\sharp q^n+s,
 \qquad
 X(n):=X(n,0),
 ```
@@ -237,10 +237,10 @@ The unit-normalized bilinear product is
 ```math
 P(n)
 =
-\frac{X(n)Y(n)}{q^\sharp}.
+\frac{X(n)Y(n)}{q_\sharp}.
 ```
 
-At the distinguished arguments \(1,q,q^2\),
+At the distinguished arguments $1,q,q^2$,
 
 ```math
 \bigl(P(1),P(q),P(q^2)\bigr)
@@ -248,16 +248,16 @@ At the distinguished arguments \(1,q,q^2\),
 (6,28,496).
 ```
 
-These coincide with the first three even perfect numbers, but this correspondence is downstream of the minimal \(q\to X/Y\) construction.
+These coincide with the first three even perfect numbers, but this correspondence is downstream of the minimal $q\to X/Y$ construction.
 
-### Structural ratios \(R\) and \(S\)
+### Structural ratios $R$ and $S$
 
-The structural ratios are defined directly from the generated \(X/Y\) hierarchy:
+The structural ratios are defined directly from the generated $X/Y$ hierarchy:
 
 ```math
 R
 =
-\frac{X(q)^\sharp}{X(1)}
+\frac{X(q)_\sharp}{X(1)}
 =
 \frac{13}{6},
 ```
@@ -265,7 +265,7 @@ R
 ```math
 S
 =
-\frac{Y(q^2)}{X(q^\sharp)}
+\frac{Y(q^2)}{X(q_\sharp)}
 =
 \frac{31}{24}.
 ```
@@ -273,7 +273,7 @@ S
 Since
 
 ```math
-X(q^2)=qX(q^\sharp)
+X(q^2)=qX(q_\sharp)
 ```
 
 for the selected pair, the second relation gives
@@ -310,7 +310,7 @@ R-S
 \frac{7}{8},
 ```
 
-but these are retained as equivalent forms rather than as the primary definitions of \(R\) and \(S\).
+but these are retained as equivalent forms rather than as the primary definitions of $R$ and $S$.
 
 ### Legacy downstream interface
 
@@ -460,7 +460,7 @@ The cosmological sector begins from the finite pre-exception L1 candidate set
 \{R(1),R(2),R(3),R(4),S(1),S(2),S(3),S(4)\}.
 ```
 
-For a positive structural ratio \(T\), define the normalized density realization
+For a positive structural ratio $T$, define the normalized density realization
 
 ```math
 \Omega_\Lambda(T)=\frac{T}{T+1},
@@ -541,7 +541,7 @@ The corresponding exact density quadruples are
 \frac{1}{1705}(961,552,192,744).
 ```
 
-The \(R(q)\) survivor also admits the real timelike Lorentz/light-cone factorization
+The $R(q)$ survivor also admits the real timelike Lorentz/light-cone factorization
 
 ```math
 \gamma=\frac{13}{12},
@@ -559,7 +559,7 @@ with reciprocal light-cone eigenvalues
 \lambda_-=\frac{2}{3}.
 ```
 
-This Lorentz/light-cone factorization is an internal structural interpretation of the \(R(q)\) survivor; it is **not** used as an additional L1 filter. The theoretical selection therefore terminates at the pair
+This Lorentz/light-cone factorization is an internal structural interpretation of the $R(q)$ survivor; it is **not** used as an additional L1 filter. The theoretical selection therefore terminates at the pair
 
 ```math
 \{R(q),S(q^2)\}.
@@ -600,156 +600,239 @@ flowchart TB
 
 ### Electromagnetic Coupling and Mass Hierarchy
 
-The effective structural indices are generated from the common structural values above through fixed backbone values and residual structural corrections.
+Paper 2 Version 1.1 rewrites the charged-particle sector directly in the generated
+$q/X/Y/P$ hierarchy and derives the common electron--proton precursor internally
+before the starred corrections are evaluated.
 
-The backbone values are
+Define
+
+```math
+C_e
+=
+X(q,+1)Y(q^2)
+=
+13\cdot31
+=
+403,
+```
+
+```math
+C_G
+=
+X(q_\sharp,-1)Y(q_\sharp)
+=
+23\cdot15
+=
+345.
+```
+
+The common precursor is
+
+```math
+\Psi_{Gp}
+=
+\frac{C_e-Y(0)}{X(q)}
+=
+\frac{67}{2}.
+```
+
+This gives the forward structural ordering
+
+```math
+C_e
+\longrightarrow
+\Psi_{Gp}
+\longrightarrow
+\left(\Psi_e^*,\Psi_p^*\right).
+```
+
+The electron and proton starred corrections are
+
+```math
+\Psi_e^*
+=
+\frac{X(q)}{\Psi_{Gp}-P(1)^{-1}}
+=
+\frac{9}{25},
+```
+
+```math
+\widehat{\Psi}_{Gp}
+=
+C_G+q-\Psi_{Gp}^{-1},
+\qquad
+\Psi_p^*
+=
+\frac{q^3}{\widehat{\Psi}_{Gp}}
+=
+\frac{536}{23247}.
+```
+
+The charged-sector backbones are evaluated as sparse weighted contractions. For the electron,
 
 ```math
 \Psi_{e0}
 =
-\left(
-\frac{3}{2}
-\right)
-\frac{13\cdot31^2-P_{\max}^2}{3},
-\qquad
+K(0)
+\begin{pmatrix}1&-1\end{pmatrix}
+\begin{pmatrix}
+C_eY(q^2)\\
+Y(q)^2
+\end{pmatrix}
+=
+6222,
+```
+
+```math
+\Psi_e
+=
+K(0)
+\begin{pmatrix}1&-1&-q_\sharp\end{pmatrix}
+\begin{pmatrix}
+C_eY(q^2)\\
+Y(q)^2\\
+\Psi_e^*
+\end{pmatrix}
+=
+6222-\frac{27}{50}.
+```
+
+For the proton,
+
+```math
 \Psi_{p0}
 =
-\left(
-\frac{3}{2}
-\right)
-\frac{13^2\cdot31+P_{\max}^2}{12},
+\frac{K(1)}{X(q)}
+\begin{pmatrix}1&1\end{pmatrix}
+\begin{pmatrix}
+C_eX(q,+1)\\
+Y(q)^2
+\end{pmatrix}
+=
+661,
+```
+
+```math
+\Psi_p
+=
+\frac{K(1)}{X(q)}
+\begin{pmatrix}1&1&q\end{pmatrix}
+\begin{pmatrix}
+C_eX(q,+1)\\
+Y(q)^2\\
+\Psi_p^*
+\end{pmatrix}
+=
+661+\frac{134}{23247}.
+```
+
+For the neutron,
+
+```math
+\Psi_n^*
+=
+\frac{1}{q_\sharp^4}
+\frac{P(q)-q_\sharp^{-1}}{P(q)+1},
 ```
 
 ```math
 \Psi_{n0}
 =
-\left(
-\frac{3}{2}
-\right)
-\left(
-13\cdot31+P_{\min}^2
-\right)12,
-\qquad
+K(1)X(q)
+\begin{pmatrix}1&1\end{pmatrix}
+\begin{pmatrix}C_e\\q^2\end{pmatrix}
+=
+7326,
+```
+
+```math
+\Psi_n
+=
+K(1)X(q)
+\begin{pmatrix}1&1&-q_\sharp\end{pmatrix}
+\begin{pmatrix}C_e\\q^2\\\Psi_n^*\end{pmatrix}
+=
+7326-\frac{166}{261}.
+```
+
+For the muon,
+
+```math
 \Psi_{\mu0}
 =
-\frac{\Psi_{p0}}{P_{\min}^2},
-\qquad
-\Psi_{\tau0}
+\frac{K(1)}{X(q^2)}
+\begin{pmatrix}1&1\end{pmatrix}
+\begin{pmatrix}C_eX(q,+1)\\Y(q)^2\end{pmatrix}
 =
-\Psi_{p0}.
-```
-
-The residual structural corrections are
-
-```math
-\delta_e
-=
-\frac{1}{2}
-+
-\frac{1}{P_{\mathrm{mid}}^2},
-\qquad
-\delta_p
-=
-\frac{6^2}
-{\Psi_{e0}+24-\frac{1}{2}},
-\qquad
-\delta_n
-=
-\left(
-\frac{2}{3}
-\right)
-\frac{12P_{\max}-1}
-{12P_{\max}+3},
+\frac{661}{4},
 ```
 
 ```math
-\delta_\mu
+\Psi_\mu^*
 =
-\frac{1}{2}
--
-\frac{1}{P_{\max}^2}
-+
-\frac{1}
-{\Psi_{\mu0}P_{\max}^2},
-\qquad
-\delta_\tau=1.
-```
-
-The effective indices are therefore
-
-```math
-\Psi_e^{\mathrm{eff}}
-=
-\Psi_{e0}-\delta_e,
-\qquad
-\Psi_p^{\mathrm{eff}}
-=
-\Psi_{p0}+\delta_p,
-\qquad
-\Psi_n^{\mathrm{eff}}
-=
-\Psi_{n0}-\delta_n,
+\frac{q^4K(q)}{Y(q)^2}
+\frac{\Psi_{e0}-Y(q)}{\Psi_{p0}},
 ```
 
 ```math
-\Psi_\mu^{\mathrm{eff}}
+\Psi_\mu
 =
-\Psi_{\mu0}-\delta_\mu,
-\qquad
-\Psi_\tau^{\mathrm{eff}}
+\frac{K(1)}{X(q^2)}
+\begin{pmatrix}1&1&-q\end{pmatrix}
+\begin{pmatrix}
+C_eX(q,+1)\\
+Y(q)^2\\
+\Psi_\mu^*
+\end{pmatrix}
 =
-\Psi_{\tau0}+\delta_\tau.
+\frac{661}{4}-\frac{31075}{64778}.
 ```
 
-The inverse electromagnetic coupling is then
+The tau index remains
 
 ```math
-\alpha^{-1}
-=
-4\pi B_{\alpha}
-\left(
-1+\frac{1}{\Psi_e^{\mathrm{eff}}}
-\right).
+\Psi_\tau=662.
 ```
 
-The charged-particle mass ratios are then written as
+At the observable level, the two common correction maps remain
+
+```math
+1+\Psi_i^{-1},
+\qquad
+1-\Psi_i^{-1}.
+```
+
+The inverse electromagnetic coupling and mass ratios are
+
+```math
+\alpha^{-1}(0)
+=
+4\pi B_\alpha
+\left(1+\frac{1}{\Psi_e}\right),
+```
 
 ```math
 \frac{m_p}{m_e}
 =
-\alpha^{-1}A_d
-\left(
-1-\frac{1}{\Psi_p^{\mathrm{eff}}}
-\right),
+\alpha^{-1}(0)A_d
+\left(1-\frac{1}{\Psi_p}\right),
 \qquad
 \frac{m_n}{m_e}
 =
-\alpha^{-1}A_d
-\left(
-1-\frac{1}{\Psi_n^{\mathrm{eff}}}
-\right),
+\alpha^{-1}(0)A_d
+\left(1-\frac{1}{\Psi_n}\right),
 ```
 
 ```math
 \frac{m_\mu}{m_e}
 =
-\left(
-\frac{3}{2}
-\right)
-4\pi B_{\alpha}
-\left(
-1+\frac{1}{\Psi_\mu^{\mathrm{eff}}}
-\right),
+K(1)\,4\pi B_\alpha
+\left(1+\frac{1}{\Psi_\mu}\right),
 \qquad
 \frac{m_\tau}{m_\mu}
 =
-\left(
-\frac{3}{4}
-\right)
-A_{\tau}
-\left(
-1+\frac{1}{\Psi_\tau^{\mathrm{eff}}}
-\right),
+K(1;4,-1)A_\tau
+\left(1+\frac{1}{\Psi_\tau}\right),
 ```
 
 with
@@ -761,27 +844,95 @@ with
 \frac{m_\mu}{m_e}.
 ```
 
-The electron mass-energy scale is obtained from the structural mass path
+The electron mass-energy normalization retains the Version 1.0 product-map representation
 
 ```math
-\Psi_{m_e}^{*}
+\Psi_{me}
 =
-24\left[
-\frac{3}{2}RS(6\cdot24)-1
-\right],
-\qquad
-\Psi_{m_e}
+\begin{pmatrix}q&q^{-1}&-1\end{pmatrix}
+\begin{pmatrix}
+P(1)P(q)P(q^2)\\
+P(q)\Psi_{p0}\\
+P(q)
+\end{pmatrix}
 =
-12\Psi_{m_e}^{*}
-+
-\frac{\Psi_{e0}}{3},
+175882,
 ```
+
+and Version 1.1 makes explicit the equivalent neutron-backbone form
+
+```math
+\Psi_{me}
+=
+qX(q)\Psi_{n0}+qP(q)+q
+=
+175882.
+```
+
+The secondary electron-mass quantity is
+
+```math
+\Psi_{me}^*
+=
+\frac{\Psi_{me}-\Psi_{e0}/q_\sharp}{X(q)}
+=
+14484,
+```
+
+with the exact equivalent representations
+
+```math
+\Psi_{me}^*
+=
+\frac{Y(q)}{q_\sharp}\Psi_{e0}-P(q)-P(1),
+```
+
+```math
+\Psi_{me}^*
+=
+Y(q)\left(q_\sharp\Psi_{p0}+P(q)\right)
++
+\frac{\Psi_{n0}}{K(1)X(q)},
+```
+
+```math
+\Psi_{me}^*
+=
+q\Psi_{n0}-P(1)P(q).
+```
+
+The electron--neutron backbones also reconstruct the same precursor through
+
+```math
+\Psi_{Gp}
+=
+\frac{1}{q}
+\left(
+\Psi_{n0}-\frac{Y(q)}{P(1)}\Psi_{e0}
+\right)
+=
+\frac{1}{2}
+\left(
+\Psi_{n0}-\frac{7}{6}\Psi_{e0}
+\right)
+=
+\frac{67}{2}.
+```
+
+This second route is an internal closure check; the defining route remains
+
+```math
+C_e\longrightarrow\Psi_{Gp}.
+```
+
+Finally,
 
 ```math
 m_e c^2
 =
 \frac{(c/10^3)^2}
-{\Psi_{m_e}\left[1+(\Psi_{m_e}^{*})^{-2}\right]} 10^{-6}
+{\Psi_{me}\left[1+(\Psi_{me}^*)^{-2}\right]}
+10^{-6}
 \ \mathrm{MeV}.
 ```
 
@@ -800,39 +951,49 @@ config:
 ---
 flowchart TB
     subgraph CommonBranch["Common Branch Structure"]
-        branch_matrix["[Bα  Bq; Ad  Aτ] = [3R²; 8R] [S⁻¹  S]"]
         Balpha["Bα = 3R²/S"]
         Ad["Ad = 8R/S"]
         Atau["Aτ = 8RS"]
     end
 
-    subgraph Electron["Electron structure"]
-        alpha["α⁻¹ = 4πBα(1 + 1/Ψe_eff)"]
-        mn_me["mn/me = α⁻¹Ad(1 − 1/Ψn_eff)"]
-        mp_me["mp/me = α⁻¹Ad(1 − 1/Ψp_eff)"]
-        mmu_me["mμ/me = (3/2)4πBα(1 + 1/Ψμ_eff)"]
-        mtau_mmu["mτ/mμ = (3/4)Aτ(1 + 1/Ψτ_eff)"]
-        mtau_me["mτ/me = (mτ/mμ)(mμ/me)"]
+    subgraph Precursor["Version 1.1 Common Precursor"]
+        Ce["Ce = X(q,+1)Y(q²) = 403"]
+        Gp["ΨGp = (Ce − Y(0))/X(q) = 67/2"]
+        Estar["Ψe* = 9/25"]
+        Pstar["Ψp* = 536/23247"]
+        EN["(Ψn0 − (7/6)Ψe0)/2 = 67/2"]
     end
 
-    subgraph Quark["Quark"]
-        Kq["(Ku,Kd,Kc,Ks,Kt,Kb) = (1/(2R), 1/2, 1+1/2, 1−1/4, 2+1/(2R), 2+1/2)"]
+    subgraph Charged["Charged-Particle Structure"]
+        alpha["α⁻¹ = 4πBα(1 + 1/Ψe)"]
+        mp_me["mp/me = α⁻¹Ad(1 − 1/Ψp)"]
+        mn_me["mn/me = α⁻¹Ad(1 − 1/Ψn)"]
+        mmu_me["mμ/me = K(1)4πBα(1 + 1/Ψμ)"]
+        mtau_mmu["mτ/mμ = K(1;4,−1)Aτ(1 + 1/Ψτ)"]
     end
 
-    branch_matrix --> Balpha
-    branch_matrix --> Ad
-    branch_matrix --> Atau
+    subgraph ElectronMass["Electron Mass-Energy Closure"]
+        Pme["Ψme = 175882"]
+        Pmestar["Ψme* = 14484"]
+        Ee["me c² = (c/10³)² / [Ψme(1 + Ψme*⁻²)]"]
+    end
+
+    Ce --> Gp
+    Gp --> Estar
+    Gp --> Pstar
+    EN --> Gp
+
     Balpha --> alpha
-    Balpha --> mmu_me
-    Ad --> mn_me
     Ad --> mp_me
+    Ad --> mn_me
     Atau --> mtau_mmu
-    alpha --> mn_me
     alpha --> mp_me
-    mmu_me --> mtau_me
-    mtau_mmu --> mtau_me
-    Kq --> |"Kc = 3/2"| mmu_me
-    Kq --> |"Ks = 3/4"| mtau_mmu
+    alpha --> mn_me
+    Balpha --> mmu_me
+
+    Pme --> Pmestar
+    Pme --> Ee
+    Pmestar --> Ee
 ```
 
 ### Gravity
@@ -1230,7 +1391,7 @@ The Higgs mass and electroweak vacuum expectation value are represented by
 B_H-\Psi_v,
 ```
 
-The Higgs-sector structural indices are generated directly from the common branch ratio \(R\):
+The Higgs-sector structural indices are generated directly from the common branch ratio $R$:
 
 ```math
 \Psi_H
@@ -1273,7 +1434,7 @@ The weak mixing relation is
 \sqrt{1-\sin^2\theta_W}.
 ```
 
-The \(W\)-boson mass ratio and physical mass scale are
+The $W$-boson mass ratio and physical mass scale are
 
 ```math
 \frac{m_W}{m_e}
@@ -1284,7 +1445,7 @@ The \(W\)-boson mass ratio and physical mass scale are
 \right).
 ```
 
-The \(Z\)-boson mass is then
+The $Z$-boson mass is then
 
 ```math
 m_Z
@@ -1506,38 +1667,20 @@ Detailed numerical outputs are reproduced by running the corresponding paper scr
 
 ### Cosmology
 
-The L1 structural analysis terminates at two exact survivors.  
-Observation is shown only as a downstream comparison.
-
 | Case | $\Omega_\Lambda$ | $\Omega_{dm}$ | $\Omega_b$ | $\Omega_m$ | $Q$ |
 |---|---:|---:|---:|---:|---:|
 | $R(q)$ universe | 0.684211 | 0.267206 | 0.048583 | 0.315789 | 1.000000 |
 | $S(q^2)$ universe | 0.563636 | 0.323754 | 0.112610 | 0.436364 | 1.000000 |
-| Planck 2018 Plik best fit  | 0.684200 | 0.266411 | 0.049389 | 0.315800 | 0.991848 |
+| Planck 2018 Plik best fit | 0.684200 | 0.266411 | 0.049389 | 0.315800 | 0.991848 |
 | DESI+CMB+Pantheon+ | 0.688600 | 0.262734 | 0.048666 | 0.311400 | 0.982114 |
 | DESI+CMB+DESY5 | 0.680900 | 0.269305 | 0.049795 | 0.319100 | 1.000530 |
-
-Here
-
-```math
-Q
-=
-\sqrt{
-\frac{\Omega_m^2}
-{3\Omega_\Lambda\Omega_b}
-}.
-```
-
-The Planck row is reconstructed from the published central values
-\(H_0=67.37\), \(\Omega_m=0.3147\), and
-\(\omega_b=\Omega_bh^2=0.02233\).
 
 ### Electromagnetic Coupling and Mass Hierarchy
 
 | Quantity | Theory | Observation | σ |
 |---|---:|---:|---:|
 | $\alpha^{-1}$ | 137.035999177055 | 137.035999177000 | +0.002638 |
-| $m_p/m_e$ | 1836.152673425830 | 1836.152673426000 | -0.005321 |
+| $m_p/m_e$ | 1836.152673425975 | 1836.152673426000 | -0.000791 |
 | $m_n/m_e$ | 1838.683662002614 | 1838.683662000000 | +0.003533 |
 | $m_\mu/m_e$ | 206.768282701257 | 206.768282700000 | +0.000273 |
 | $m_\tau / m_\mu$ | 16.817031722054 | 16.817000000000 | +0.028838 |
@@ -1737,7 +1880,7 @@ An Axiomatic Construction from Update Identity to Structural Generation**
 
 - https://doi.org/10.5281/zenodo.18371034
 
-Version 1.0 derives the common structure from a minimal causal-inheritance update identity. The construction selects `(q,q♯)=(2,3)`, generates the `X` and `Y` sequences and the normalized product map `P`, and defines `R=13/6` and `S=31/24` directly from the generated `X/Y` hierarchy. The product-map formulas are retained as exact equivalent closure relations. Finite geometry is separated into an independent mathematical consistency check.
+Version 1.2 derives the common structure from the minimal causal-inheritance update identity, selecting $(q,q_\sharp)=(2,3)$ and generating the $X$, $Y$, and normalized product map $P$. It defines $P(n)$, $R(n)$, and $S(n)$ as downstream functions of the common generation index and obtains the distinguished values $R(q)=13/6$ and $S(q^2)=31/24$. The arithmetic refinement uses Zsigmondy-type primitive-divisor structure to identify the first novelty failure of the product sequence at $n=5$, while retaining the full sequence rather than truncating it.
 
 ---
 
@@ -1748,8 +1891,8 @@ Version 1.0 derives the common structure from a minimal causal-inheritance updat
 - https://doi.org/10.5281/zenodo.19028107
 
 Version 1.0 generates eight finite L1 cosmological candidates and reduces them directly to
-\(R(q)=R(2)=13/6\) and \(S(q^2)=S(4)=31/24\) through the exact rational square-root closure
-\(\sqrt{Z_c(T)}\in\mathbb{Q}\). Observational comparison is downstream and is not used in the `8 -> 2` selection.
+$R(q)=R(2)=13/6$ and $S(q^2)=S(4)=31/24$ through the exact rational square-root closure
+$\sqrt{Z_c(T)}\in\mathbb{Q}$. Observational comparison is downstream and is not used in the `8 -> 2` selection.
 
 Corresponding code:
 
@@ -1764,6 +1907,8 @@ python -m code.paper1_cosmology
 **Structural Origin of Electromagnetic Coupling and Mass Hierarchy**
 
 - https://doi.org/10.5281/zenodo.19426366
+
+Version 1.1 derives the common precursor $\Psi_{Gp}=67/2$ internally from $C_e$, reconstructs the same value from the electron and neutron backbones as an internal closure check, and makes the multiple exact representations of $\Psi_{me}$ and $\Psi_{me}^{*}$ explicit.
 
 Corresponding code:
 
@@ -1919,7 +2064,7 @@ The paper-level outputs report:
 
 The numerical relations in this repository are presented as structural correspondences between fixed dimensionless ratios and observed reference quantities.
 
-Version 1.0 places the generative basis at the pre-observational minimal-axiom layer \(L1\). The finite-geometric appendix is an independent mathematical consistency check of the already-derived structure and is not used to select `q` or define `X`, `Y`, `P`, `R`, or `S`. Sector-specific physical interpretations are downstream of this structural layer.
+Version 1.0 places the generative basis at the pre-observational minimal-axiom layer $L1$. The finite-geometric appendix is an independent mathematical consistency check of the already-derived structure and is not used to select `q` or define `X`, `Y`, `P`, `R`, or `S`. Sector-specific physical interpretations are downstream of this structural layer.
 
 The sector relations are not introduced as fitted empirical formulas. Each relation uses the same fixed structural inputs and is evaluated by direct comparison with the corresponding reference values.
 

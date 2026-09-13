@@ -83,7 +83,7 @@ def compute_cosmological_kinematic_values(
     B_alpha      = fraction_to_decimal(constants.B_alpha)
 
     psi_electron = compute_psi_values(constants)
-    psi_e_eff    = fraction_to_decimal(psi_electron.psi_e - psi_electron.delta_e)
+    psi_e_eff    = fraction_to_decimal(psi_electron.psi_e)
 
     omega_b_st   = 1 / (3 * R**2 + 3 * R)
     omega_st     = 4 * PI * B_alpha / psi_e_eff

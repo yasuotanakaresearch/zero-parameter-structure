@@ -171,11 +171,11 @@ assert [
     (label, n, T, root)
     for label, n, T, _, _, root in cosmology_survivors
 ] == [
-    ("R", 2, Fraction(13, 6), Fraction(12, 13)),
+    ("R", 2, Fraction(13, 6),  Fraction(12, 13)),
     ("S", 4, Fraction(31, 24), Fraction(36, 31)),
 ]
 
-assert R_map(q) == R
+assert R_map(q)    == R
 assert S_map(q**2) == S
 
 # Downstream sectors in this end-to-end example continue with R(q).
@@ -183,39 +183,103 @@ Omega_L, Omega_dm, Omega_b, Omega_m = cosmology_from_T(R)
 
 
 # =========================================================
-# Electromagnetic coupling and mass hierarchy
+# Electromagnetic coupling and mass hierarchy — Paper 2 v1.1
 # =========================================================
 
-core_13 = R * 6
-core_31 = S * 24
+def K(n: int, d: int | None = None, s: int = 1) -> Fraction:
+    """Structural affine factor K(n;d,s) = n + s/d, with d=q by default."""
+    if d is None:
+        d = q
+    return Fraction(n, 1) + Fraction(s, d)
 
-# Structural backbone values Psi_0.
-psi_e0   = Fraction(3, 2) * (core_13    * core_31**2 - P_MAX**2) / 3
-psi_p0   = Fraction(3, 2) * (core_13**2 * core_31    + P_MAX**2) / 12
-psi_n0   = Fraction(3, 2) * (core_13    * core_31    + P_MIN**2) * 12
+def dot_product(w, x):
+    return sum(wi * xi for wi, xi in zip(w, x))
 
-# Residual structural fluctuations delta_psi.
-delta_e   = Fraction(1, 2) + Fraction(1, P_MID**2)
-delta_p   = Fraction(6**2) * Fraction(1, psi_e0 + 24 - Fraction(1, 2))
-delta_n   = Fraction(2, 3) * Fraction(12*P_MAX - 1, 12*P_MAX + 3)
+Ce = X(q,       +1) * Y(q**2)       # 13 * 31 = 403
+CG = X(q_sharp, -1) * Y(q_sharp)    # 23 * 15 = 345
 
-psi_e     = psi_e0   - delta_e
-psi_p     = psi_p0   + delta_p
-psi_n     = psi_n0   - delta_n
+# Common electron/proton precursor.
+psi_Gp = Fraction(Ce - Y(0), X(q))  # 67/2
 
-alpha_inv = 4*math.pi * B_alpha * (1 + 1/psi_e)
-mp_me     = alpha_inv * A_d     * (1 - 1/psi_p)
-mn_me     = alpha_inv * A_d     * (1 - 1/psi_n)
+kappa_e  = K(0)
+kappa_p  = K(1) / X(q)
+kappa_n  = K(1) * X(q)
+kappa_mu = K(1) / X(q**2)
 
-alpha = alpha_inv**-1
+# Electron
+psi_e_star = Fraction(X(q), (psi_Gp - Fraction(1, P(1))))
+w_e0       = [Ce * Y(q**2), Y(q)**2]
+w_e        = [Ce * Y(q**2), Y(q)**2, psi_e_star]
+M_e0       = [1, -1]
+M_e        = [1, -1, -q_sharp]
+psi_e0     = kappa_e * dot_product(M_e0, w_e0)
+psi_e      = kappa_e * dot_product(M_e , w_e)
 
-# Electron rest energy in MeV.
-# The expression is kept close to the structural form used in the paper code.
-psi_me_star = 24 * (Fraction(3, 2) * (R * S) * (6 * 24) - 1)
-psi_me      = 12 * psi_me_star + Fraction(psi_e0, 3)
-me_ev       = Fraction(c, 10**3) ** 2 / (psi_me * (1 + psi_me_star**-2))
-me_mev      = me_ev * 10**-6  # MeV
-me_gev      = me_ev * 10**-9  # GeV
+# Proton G1
+psi_Gp_hat = CG + q - Fraction(1, psi_Gp)
+psi_p_star = Fraction(q**3, psi_Gp_hat)
+w_p0       = [Ce * X(q,1), Y(q)**2]
+w_p        = [Ce * X(q,1), Y(q)**2, psi_p_star]
+M_p0       = [1, 1]
+M_p        = [1, 1, q]
+psi_p0     = kappa_p * dot_product(M_p0, w_p0)
+psi_p      = kappa_p * dot_product(M_p , w_p)
+
+# Neutron
+det_ratio_n = Fraction(P(q) - Fraction(1, q_sharp), P(q) + 1)
+psi_n_star  = Fraction(det_ratio_n, q_sharp**4)
+w_n0        = [Ce, q**2]
+w_n         = [Ce, q**2, psi_n_star]
+M_n0        = [1, 1]
+M_n         = [1, 1, -q_sharp]
+psi_n0      = kappa_n * dot_product(M_n0, w_n0)
+psi_n       = kappa_n * dot_product(M_n , w_n)
+
+# Muon
+w_mu0       = [Ce * X(q,1), Y(q)**2]
+M_mu0       = [1, 1]
+psi_mu0     = kappa_mu * dot_product(M_mu0, w_mu0)
+psi_mu_star = q**4 * K(q) / Y(q)**2 * (psi_e0 - Y(q)) / psi_p0
+w_mu        = [Ce * X(q,1), Y(q)**2, psi_mu_star]
+M_mu        = [1, 1, -q]
+psi_mu      = kappa_mu * dot_product(M_mu, w_mu)
+
+# Tau
+psi_tau = Fraction(662, 1)
+
+# Observable maps.
+alpha_inv =        4 * math.pi * B_alpha * (1 + 1 / psi_e)
+mp_me     =          alpha_inv * A_d     * (1 - 1 / psi_p)
+mn_me     =          alpha_inv * A_d     * (1 - 1 / psi_n)
+mmu_me    = K(1) * 4 * math.pi * B_alpha * (1 + 1 / psi_mu)
+mtau_mmu  = K(1, 4, -1)        * A_tau   * (1 + 1 / psi_tau)
+mtau_me   = mtau_mmu * mmu_me
+alpha     = alpha_inv**-1
+
+# Electron mass-energy normalization.
+# Version 1.0 product-map form is retained.
+x_me = [
+    P(1) * P(q) * P(q**2), # 6 * 28 * 496
+           P(q) * psi_p0,  #     28 * 661
+           P(q),           #     28
+]
+psi_me      = dot_product([q, Fraction(1, q), -1], x_me)
+psi_me_star = (psi_me - psi_e0 / q_sharp) / X(q)
+
+# Version 1.1 exact closure checks.
+psi_me_from_n  = q * X(q) * psi_n0 + q * P2 + q
+psi_Gp_from_en = (psi_n0 - psi_e0 * Y(q) / P1) / q
+
+assert psi_Gp == psi_Gp_from_en == Fraction(67, 2)
+assert psi_e_star == Fraction(9, 25)
+assert psi_p_star == Fraction(536, 23247)
+assert psi_me == psi_me_from_n == 175882
+assert psi_me_star == 14484
+
+c_km   = Fraction(c, 10**3)
+me_ev  = c_km ** 2 / (psi_me * (1 + psi_me_star**-2))
+me_mev = me_ev * 10**-6  # MeV
+me_gev = me_ev * 10**-9  # GeV
 
 
 # =========================================================
@@ -264,23 +328,14 @@ K_c = K_q["c"]
 K_s = K_q["s"]
 
 # =========================================================
-# Charged-lepton mass hierarchy
+# Charged-lepton coefficient inheritance
 # =========================================================
 
-# Structural backbone values Psi_0.
-psi_mu0  = Fraction(psi_p0, P_MIN**2)
-psi_tau0 = psi_p0
+K_c = K_q["c"]
+K_s = K_q["s"]
 
-# Residual structural fluctuations delta_psi.
-delta_mu  = Fraction(1, 2) - Fraction(1, P_MAX**2) + Fraction(1, (psi_mu0 * P_MAX**2))
-delta_tau = Fraction(1, 1)
-
-psi_mu   = psi_mu0  - delta_mu
-psi_tau  = psi_tau0 + delta_tau
-
-mmu_me   = K_q["c"] * 4*math.pi * B_alpha * (1 + 1/psi_mu)
-mtau_mmu = K_q["s"]             * A_tau   * (1 + 1/psi_tau)
-mtau_me  = mtau_mmu * mmu_me
+assert K_c == K(1)
+assert K_s == K(1, 4, -1)
 
 
 # =========================================================
@@ -402,6 +457,9 @@ def main() -> None:
     print("Electromagnetic coupling and mass hierarchy")
     print("--------------------------------------------")
     print_rows([
+        ("Psi_Gp", psi_Gp, "", ".12f"),
+        ("Psi_e*", psi_e_star, "", ".12f"),
+        ("Psi_p*", psi_p_star, "", ".12f"),
         ("Psi_e", psi_e, "", ".12f"),
         ("Psi_p", psi_p, "", ".12f"),
         ("Psi_n", psi_n, "", ".12f"),
@@ -411,6 +469,7 @@ def main() -> None:
         ("m_n / m_e", mn_me, "", ".12f"),
         ("Psi_me*", psi_me_star, "", ".12f"),
         ("Psi_me", psi_me, "", ".12f"),
+        ("Psi_Gp[e-n]", psi_Gp_from_en, "", ".12f"),
         ("m_e c^2", me_ev, "eV", ".9f"),
         ("m_e c^2", me_mev, "MeV", ".15f"),
         ("m_e c^2", me_gev, "GeV", ".14e"),
@@ -447,7 +506,7 @@ def main() -> None:
     print("Charged-lepton mass hierarchy")
     print("--------------------------------")
     print(f"K_c                = {float(K_c):20.12f} = {K_c}")
-    print(f"A_d                = {float(K_s):20.12f} = {K_s}")
+    print(f"K_s                = {float(K_s):20.12f} = {K_s}")
     print_rows([
         ("Psi_mu", psi_mu, "", ".12f"),
         ("Psi_tau", psi_tau, "", ".12f"),
